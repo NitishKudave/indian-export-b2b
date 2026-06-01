@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
@@ -13,7 +13,7 @@ function ProductsContent() {
 
   const { formatPrice } = useCurrency();
   const [categories, setCategories] = useState(mockData.categories);
-  const [products, setProducts] = useState(mockData.products);
+  const [products, setProducts] = useState<any[]>(mockData.products);
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
 

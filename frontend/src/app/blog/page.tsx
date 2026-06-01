@@ -6,7 +6,7 @@ import { apiFetch, mockData } from "@/utils/api";
 import { BookOpen, Calendar, User, ArrowRight } from "lucide-react";
 
 export default function Blog() {
-  const [blogs, setBlogs] = useState(mockData.blogs);
+  const [blogs, setBlogs] = useState<any[]>(mockData.blogs);
 
   useEffect(() => {
     async function loadBlogs() {

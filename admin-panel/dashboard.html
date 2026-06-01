@@ -1,0 +1,1955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orbinexglobal - Standalone Control Center</title>
+    <style>
+        :root {
+            --primary: #f97316;
+            --primary-hover: #ea580c;
+            --dark: #0f172a;
+            --dark-light: #1e293b;
+            --bg: #f8fafc;
+            --text: #334155;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --white: #ffffff;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: row;
+        }
+
+        /* Layout structure */
+        .wrapper {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* Sidebar styling */
+        .sidebar {
+            width: 260px;
+            background: var(--dark);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-brand {
+            padding: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--primary) 0%, #fb923c 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            box-shadow: 0 4px 6px rgba(249, 115, 22, 0.2);
+        }
+
+        .brand-text h2 {
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        .brand-text span {
+            font-size: 9px;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: block;
+            margin-top: 2px;
+        }
+
+        .sidebar-menu {
+            flex-grow: 1;
+            padding: 20px 12px;
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .menu-header {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #475569;
+            padding: 12px 16px 4px 16px;
+            font-weight: bold;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .menu-item.active {
+            background: var(--primary);
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.15);
+        }
+
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .user-badge {
+            font-size: 12px;
+            color: #e2e8f0;
+            font-weight: bold;
+        }
+
+        .user-badge span {
+            color: var(--primary);
+        }
+
+        /* Main Content Container */
+        .main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            overflow-y: auto;
+            max-height: 100vh;
+        }
+
+        .topbar {
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .topbar h1 {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--dark);
+        }
+
+        .action-header-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(249, 115, 22, 0.1);
+        }
+
+        .action-header-btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .content {
+            padding: 40px;
+            max-width: 1300px;
+            width: 100%;
+            margin: 0 auto;
+            /* vertical spacing handled by margin-bottom on .section-card */
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .stat-info p {
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--text-light);
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .stat-info h3 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--dark);
+        }
+
+        .stat-icon {
+            font-size: 24px;
+            opacity: 0.3;
+        }
+
+        /* Section blocks */
+        .section-card {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Data Tables */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .table th {
+            background: #f8fafc;
+            padding: 14px 16px;
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--text-light);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .table td {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+            color: var(--text);
+            vertical-align: middle;
+        }
+
+        .table tr:hover {
+            background: #f8fafc;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .status-badge.new { background: #fee2e2; color: var(--danger); }
+        .status-badge.contacted { background: #fef3c7; color: var(--warning); }
+        .status-badge.completed { background: #d1fae5; color: var(--success); }
+
+        .action-btn {
+            padding: 6px 12px;
+            background: #f1f5f9;
+            color: var(--dark-light);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+            margin-right: 4px;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            background: var(--dark-light);
+            color: white;
+            border-color: var(--dark-light);
+        }
+
+        .action-btn.delete {
+            background: rgba(239, 68, 68, 0.05);
+            color: var(--danger);
+            border-color: rgba(239, 68, 68, 0.1);
+        }
+
+        .action-btn.delete:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* Modal styling */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: var(--white);
+            padding: 30px;
+            width: 90%;
+            max-width: 650px;
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--dark);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-full {
+            grid-column: span 2;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-light);
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            padding: 10px 12px;
+            font-size: 13px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg);
+            width: 100%;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+        }
+
+        .modal-footer {
+            margin-top: 24px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        /* Tab panels */
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        /* Loading spinner */
+        .loading-box {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-light);
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(0, 0, 0, 0.05);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 12px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Image preview styling */
+        .crop-thumbnail {
+            width: 44px;
+            height: 44px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid var(--border);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-logo">O</div>
+                <div class="brand-text">
+                    <h2>Orbinexglobal</h2>
+                    <span>Admin Panel v1.1</span>
+                </div>
+            </div>
+
+            <ul class="sidebar-menu">
+                <li class="menu-item active" data-target="overview" onclick="switchTab('overview')">📊 Overview</li>
+                
+                <li class="menu-header">Data Management</li>
+                <li class="menu-item" data-target="products" onclick="switchTab('products')">🛒 Products Catalog</li>
+                <li class="menu-item" data-target="categories" onclick="switchTab('categories')">🗂️ Product Divisions</li>
+                <li class="menu-item" data-target="inquiries" onclick="switchTab('inquiries')">📋 Inquiries Inbox</li>
+                <li class="menu-item" data-target="blogs" onclick="switchTab('blogs')">✍️ Blog Articles</li>
+                
+                <li class="menu-header">Site Settings</li>
+                <li class="menu-item" data-target="banners" onclick="switchTab('banners')">🖼️ Home Banners</li>
+                <li class="menu-item" data-target="testimonials" onclick="switchTab('testimonials')">💬 Testimonials</li>
+                <li class="menu-item" data-target="certifications" onclick="switchTab('certifications')">🏆 Certifications</li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <div class="user-badge">Role: <span>Administrator</span></div>
+                <button class="action-btn delete" onclick="logout()" style="width: 100%; text-align: center; justify-content: center; padding: 10px;">Logout Desk</button>
+            </div>
+        </aside>
+
+        <!-- Main Dashboard Operations -->
+        <main class="main">
+            <!-- Sticky Top bar -->
+            <div class="topbar">
+                <h1 id="pageTitle">Overview Management</h1>
+                <button class="action-header-btn" id="actionHeaderBtn" style="display: none;" onclick="triggerAddModal()">+ Add New Item</button>
+            </div>
+
+            <!-- Scrollable Content -->
+            <div class="content">
+                
+                <!-- TAB PANEL: OVERVIEW -->
+                <div id="panel-overview" class="tab-panel active">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-info">
+                                <p>Total Inquiries</p>
+                                <h3 id="stat-total-inquiries">-</h3>
+                            </div>
+                            <span class="stat-icon">📋</span>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-info">
+                                <p>New Inquiries</p>
+                                <h3 id="stat-new-inquiries" style="color: var(--danger);">-</h3>
+                            </div>
+                            <span class="stat-icon">🔔</span>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-info">
+                                <p>Listed Products</p>
+                                <h3 id="stat-total-products">-</h3>
+                            </div>
+                            <span class="stat-icon">🛒</span>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-info">
+                                <p>Published Blogs</p>
+                                <h3 id="stat-total-blogs">-</h3>
+                            </div>
+                            <span class="stat-icon">✍️</span>
+                        </div>
+                    </div>
+
+                    <div class="section-card">
+                        <div class="section-title">📋 Recent Trade Inquiries</div>
+                        <div id="recentInquiriesContainer" class="table-responsive">
+                            <div class="loading-box"><div class="spinner"></div><p>Syncing inquiries...</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB PANEL: PRODUCTS -->
+                <div id="panel-products" class="tab-panel">
+                    <div class="section-card">
+                        <div class="section-title">🛒 Catalog Products</div>
+                        <div id="productsContainer" class="table-responsive">
+                            <div class="loading-box"><div class="spinner"></div><p>Syncing products...</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB PANEL: INQUIRIES -->
+                <div id="panel-inquiries" class="tab-panel">
+                    <div class="section-card">
+                        <div class="section-title">📋 Trade Inquiries Management</div>
+                        <div id="inquiriesContainer" class="table-responsive">
+                            <div class="loading-box"><div class="spinner"></div><p>Syncing inbox...</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB PANEL: BLOGS -->
+                <div id="panel-blogs" class="tab-panel">
+                    <div class="section-card">
+                        <div class="section-title">✍️ Corporate Blog Posts</div>
+                        <div id="blogsContainer" class="table-responsive">
+                            <div class="loading-box"><div class="spinner"></div><p>Syncing blogs...</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB PANEL: BANNERS -->
+                <div id="panel-banners" class="tab-panel">
+                    <div class="section-card">
+                        <div class="section-title">🖼️ Homepage Slides</div>
+                        <div id="bannersContainer" class="table-responsive">
+                            <div class="loading-box"><div class="spinner"></div><p>Syncing banner configuration...</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB PANEL: TESTIMONIALS -->
+                <div id="panel-testimonials" class="tab-panel">
+                    <div class="section-card">
+                        <div class="section-title">💬 Client Testimonials</div>
+                        <div id="testimonialsContainer" class="table-responsive">
+                            <div class="loading-box"><div class="spinner"></div><p>Syncing testimonials...</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB PANEL: CERTIFICATIONS -->
+                <div id="panel-certifications" class="tab-panel">
+                    <div class="section-card">
+                        <div class="section-title">🏆 Compliance Certifications</div>
+                        <div id="certificationsContainer" class="table-responsive">
+                            <div class="loading-box"><div class="spinner"></div><p>Syncing certifications...</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB PANEL: CATEGORIES (Product Divisions) -->
+                <div id="panel-categories" class="tab-panel">
+                    <div class="section-card">
+                        <div class="section-title">🗂️ Export Product Divisions (Categories)</div>
+                        <p style="font-size:12px; color:var(--text-light); margin-bottom:20px;">These are the cards shown in the <strong>"Export Product Divisions"</strong> section on the homepage. Edit the image, name, or description for each division below.</p>
+                        <div id="categoriesContainer" class="table-responsive">
+                            <div class="loading-box"><div class="spinner"></div><p>Syncing divisions...</p></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL OVERLAYS FOR EDITING DATA -->
+    
+    <!-- 0. Category (Product Division) Edit Modal -->
+    <div class="modal-overlay" id="categoryModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="categoryFormTitle">Edit Product Division</h3>
+                <button class="modal-close" onclick="closeModal('categoryModal')">&times;</button>
+            </div>
+            <!-- Live image preview -->
+            <div id="catImagePreviewBox" style="margin-bottom:16px; display:none; border-radius:12px; overflow:hidden; height:180px; background:#f1f5f9; position:relative;">
+                <img id="catImagePreview" src="" alt="Current Image" style="width:100%; height:100%; object-fit:cover;">
+                <span style="position:absolute; bottom:8px; left:8px; font-size:10px; background:rgba(0,0,0,0.6); color:white; padding:3px 8px; border-radius:4px; font-weight:600;">Current Image</span>
+            </div>
+            <form id="categoryForm" onsubmit="saveCategory(event)">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Division Name *</label>
+                        <input type="text" id="cat_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <input type="text" id="cat_description" placeholder="Brief description for homepage card">
+                    </div>
+                    <div class="form-group form-full" style="background:#fff8f0; border:1px solid #fed7aa; border-radius:10px; padding:16px;">
+                        <label style="color:#c2410c; margin-bottom:10px; display:block;">🖼️ Change Division Image</label>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; align-items:end;">
+                            <div class="form-group" style="margin:0;">
+                                <label>Upload Image File</label>
+                                <input type="file" id="cat_image_file" accept="image/*" onchange="previewCatImage(this)">
+                                <small style="color:var(--text-light); font-size:10px;">Recommended: 800×600px or larger</small>
+                            </div>
+                            <div class="form-group" style="margin:0;">
+                                <label>OR Paste Image URL</label>
+                                <input type="url" id="cat_image_url" placeholder="https://images.unsplash.com/..." oninput="previewCatImageUrl(this.value)">
+                                <small style="color:var(--text-light); font-size:10px;">Unsplash, direct links etc.</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="action-btn" onclick="closeModal('categoryModal')">Cancel</button>
+                    <button type="submit" class="action-header-btn">💾 Save Division</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 1. Product Form Modal -->
+    <div class="modal-overlay" id="productModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="productFormTitle">New Catalog Product</h3>
+                <button class="modal-close" onclick="closeModal('productModal')">&times;</button>
+            </div>
+            <form id="productForm" onsubmit="saveProduct(event)">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Category *</label>
+                        <select id="p_category" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Product Name *</label>
+                        <input type="text" id="p_name" required>
+                    </div>
+                    <div class="form-group form-full">
+                        <label>Description *</label>
+                        <textarea id="p_description" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Origin *</label>
+                        <input type="text" id="p_origin" value="India" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Quality Grade *</label>
+                        <input type="text" id="p_quality_grade" value="A Grade (Premium Export)" required>
+                    </div>
+                    <div class="form-group">
+                        <label>MOQ *</label>
+                        <input type="text" id="p_moq" placeholder="e.g. 15 Metric Tons" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Packaging Type *</label>
+                        <input type="text" id="p_packaging_type" placeholder="e.g. Corrugated Boxes" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Shelf Life *</label>
+                        <input type="text" id="p_shelf_life" placeholder="e.g. 45 Days" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Price (INR) *</label>
+                        <input type="number" id="p_base_price_inr" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Price Unit *</label>
+                        <input type="text" id="p_price_unit" value="Metric Ton" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Upload Primary Image</label>
+                        <input type="file" id="p_primary_image" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label>OR Primary Image URL</label>
+                        <input type="url" id="p_primary_image_url" placeholder="https://images.unsplash.com/...">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="action-btn" onclick="closeModal('productModal')">Cancel</button>
+                    <button type="submit" class="action-header-btn">Save Specs</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 2. Blog Form Modal -->
+    <div class="modal-overlay" id="blogModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="blogFormTitle">New Blog Article</h3>
+                <button class="modal-close" onclick="closeModal('blogModal')">&times;</button>
+            </div>
+            <form id="blogForm" onsubmit="saveBlog(event)">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Article Title *</label>
+                        <input type="text" id="b_title" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Author *</label>
+                        <input type="text" id="b_author" value="Orbinexglobal Team" required>
+                    </div>
+                    <div class="form-group form-full">
+                        <label>Content *</label>
+                        <textarea id="b_content" rows="8" required></textarea>
+                    </div>
+                    <div class="form-group form-full">
+                        <label>Banner Image URL</label>
+                        <input type="url" id="b_banner_image_url" placeholder="https://images.unsplash.com/...">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="action-btn" onclick="closeModal('blogModal')">Cancel</button>
+                    <button type="submit" class="action-header-btn">Save Article</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 3. Banner Form Modal -->
+    <div class="modal-overlay" id="bannerModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="bannerFormTitle">New Homepage Slide</h3>
+                <button class="modal-close" onclick="closeModal('bannerModal')">&times;</button>
+            </div>
+            <form id="bannerForm" onsubmit="saveBanner(event)">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Banner Title *</label>
+                        <input type="text" id="bn_title" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Subtitle / Caption</label>
+                        <input type="text" id="bn_subtitle">
+                    </div>
+                    <div class="form-group">
+                        <label>Slide Link *</label>
+                        <input type="text" id="bn_link" value="/products" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Display Order</label>
+                        <input type="number" id="bn_display_order" value="0" required>
+                    </div>
+                    <div class="form-group form-full">
+                        <label>Image URL</label>
+                        <input type="url" id="bn_image_url" placeholder="https://images.unsplash.com/...">
+                    </div>
+                    <div class="form-group form-full" style="flex-direction: row; align-items: center; gap: 8px;">
+                        <input type="checkbox" id="bn_active" checked style="width: auto;">
+                        <label for="bn_active" style="margin-bottom: 0;">Show on Homepage (Active)</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="action-btn" onclick="closeModal('bannerModal')">Cancel</button>
+                    <button type="submit" class="action-header-btn">Save Slide</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 4. Testimonial Form Modal -->
+    <div class="modal-overlay" id="testimonialModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="testimonialFormTitle">New Client Testimonial</h3>
+                <button class="modal-close" onclick="closeModal('testimonialModal')">&times;</button>
+            </div>
+            <form id="testimonialForm" onsubmit="saveTestimonial(event)">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Client Name *</label>
+                        <input type="text" id="t_author_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Company / Location *</label>
+                        <input type="text" id="t_company" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Client Designation *</label>
+                        <input type="text" id="t_role" value="Wholesale Importer" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Rating (1 to 5 Stars) *</label>
+                        <select id="t_rating" required>
+                            <option value="5">5 Stars</option>
+                            <option value="4">4 Stars</option>
+                            <option value="3">3 Stars</option>
+                            <option value="2">2 Stars</option>
+                            <option value="1">1 Star</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Display Order</label>
+                        <input type="number" id="t_display_order" value="0" required>
+                    </div>
+                    <div class="form-group form-full">
+                        <label>Testimonial Review Text *</label>
+                        <textarea id="t_review" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group form-full">
+                        <label>Profile Image URL</label>
+                        <input type="url" id="t_profile_image_url" placeholder="https://images.unsplash.com/...">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="action-btn" onclick="closeModal('testimonialModal')">Cancel</button>
+                    <button type="submit" class="action-header-btn">Save Review</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 5. Certification Form Modal -->
+    <div class="modal-overlay" id="certificationModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="certificationFormTitle">New Compliance Certificate</h3>
+                <button class="modal-close" onclick="closeModal('certificationModal')">&times;</button>
+            </div>
+            <form id="certificationForm" onsubmit="saveCertification(event)">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Certificate Name *</label>
+                        <input type="text" id="c_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Certificate Authority *</label>
+                        <input type="text" id="c_certificate_authority" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Display Order</label>
+                        <input type="number" id="c_display_order" value="0" required>
+                    </div>
+                    <div class="form-group form-full">
+                        <label>Description Details</label>
+                        <input type="text" id="c_description">
+                    </div>
+                    <div class="form-group form-full">
+                        <label>Authority Logo URL</label>
+                        <input type="url" id="c_logo_url" placeholder="https://images.unsplash.com/...">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="action-btn" onclick="closeModal('certificationModal')">Cancel</button>
+                    <button type="submit" class="action-header-btn">Save Certificate</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- AJAX LOGIC SCRIPTS -->
+    <script>
+        const API_URL = 'http://127.0.0.1:8000';
+        let currentTab = 'overview';
+        let currentEditingId = null;
+        let currentEditingSlug = null;
+
+        function getAuthHeaders() {
+            const token = sessionStorage.getItem('admin_token');
+            if (!token) {
+                window.location.href = '/index.html';
+                return {};
+            }
+            return {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            };
+        }
+
+        // Global Logout handler
+        function logout() {
+            if (confirm('Are you sure you want to sign out from the admin control center?')) {
+                sessionStorage.clear();
+                window.location.href = '/index.html';
+            }
+        }
+
+        // Check authentication status on startup
+        window.addEventListener('load', () => {
+            const token = sessionStorage.getItem('admin_token');
+            if (!token) {
+                window.location.href = '/index.html';
+            } else {
+                const username = sessionStorage.getItem('admin_username') || 'Admin';
+                document.querySelectorAll('.user-badge span').forEach(el => el.textContent = username);
+                switchTab('overview');
+            }
+        });
+
+        // Tab Switching Engine
+        function switchTab(tabName) {
+            currentTab = tabName;
+            
+            // Toggle active menu class
+            document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
+            const activeMenu = document.querySelector(`.menu-item[data-target="${tabName}"]`);
+            if (activeMenu) activeMenu.classList.add('active');
+            
+            // Toggle active panel layout
+            document.querySelectorAll('.tab-panel').forEach(el => el.classList.remove('active'));
+            document.getElementById(`panel-${tabName}`).classList.add('active');
+
+            // Set Top bar Title
+            const labels = {
+                overview: 'Overview Management',
+                products: 'Products Catalog Management',
+                categories: 'Product Divisions Management',
+                inquiries: 'Trade Inquiries Inbox',
+                blogs: 'Blog Articles Management',
+                banners: 'Homepage Slides Configuration',
+                testimonials: 'Testimonial Reviews Management',
+                certifications: 'Compliance Certifications Management'
+            };
+            document.getElementById('pageTitle').textContent = labels[tabName] || 'Control desk';
+
+            // Show "+ Add New" button if applicable
+            const actionBtn = document.getElementById('actionHeaderBtn');
+            if (tabName !== 'overview' && tabName !== 'inquiries' && tabName !== 'categories') {
+                actionBtn.style.display = 'block';
+                actionBtn.textContent = `+ Add ${tabName.charAt(0).toUpperCase() + tabName.slice(1, -1)}`;
+            } else {
+                actionBtn.style.display = 'none';
+            }
+
+            // Fire Tab Loading
+            loadTabData(tabName);
+        }
+
+        // Master Tab Loader Router
+        function loadTabData(tabName) {
+            if (tabName === 'overview') {
+                loadOverviewStats();
+            } else if (tabName === 'products') {
+                loadProducts();
+                populateCategoriesList();
+            } else if (tabName === 'categories') {
+                loadCategories();
+            } else if (tabName === 'inquiries') {
+                loadInquiries();
+            } else if (tabName === 'blogs') {
+                loadBlogs();
+            } else if (tabName === 'banners') {
+                loadBanners();
+            } else if (tabName === 'testimonials') {
+                loadTestimonials();
+            } else if (tabName === 'certifications') {
+                loadCertifications();
+            }
+        }
+
+        // 1. OVERVIEW DATA
+        async function loadOverviewStats() {
+            const inquiriesEl = document.getElementById('recentInquiriesContainer');
+            inquiriesEl.innerHTML = '<div class="loading-box"><div class="spinner"></div><p>Fetching active inquiries...</p></div>';
+            
+            try {
+                const res = await fetch(`${API_URL}/api/admin/stats/`, { headers: getAuthHeaders() });
+                if (res.status === 401) return logout();
+                const data = await res.json();
+                
+                document.getElementById('stat-total-inquiries').textContent = data.total_inquiries || 0;
+                document.getElementById('stat-new-inquiries').textContent = data.new_inquiries || 0;
+                document.getElementById('stat-total-products').textContent = data.total_products || 0;
+                document.getElementById('stat-total-blogs').textContent = data.total_blogs || 0;
+
+                // Render recent list
+                const inqs = data.recent_inquiries || [];
+                if (inqs.length === 0) {
+                    inquiriesEl.innerHTML = '<p style="text-align: center; padding: 20px; font-size: 13px; color: var(--text-light);">No trade inquiries found.</p>';
+                    return;
+                }
+
+                let html = `<table class="table">
+                    <thead>
+                        <tr>
+                            <th>Sender</th>
+                            <th>Product Focus</th>
+                            <th>Quantity</th>
+                            <th>Status</th>
+                            <th>Date Received</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+                inqs.forEach(inq => {
+                    html += `<tr>
+                        <td><strong>${inq.full_name}</strong><br><small style="color: var(--text-light);">${inq.company || 'Private'}</small></td>
+                        <td><span style="color: var(--primary); font-weight: bold;">${inq.product_name}</span></td>
+                        <td>${inq.quantity || 'N/A'}</td>
+                        <td><span class="status-badge ${inq.status}">${inq.status.toUpperCase()}</span></td>
+                        <td>${new Date(inq.created_at).toLocaleDateString()}</td>
+                    </tr>`;
+                });
+                html += `</tbody></table>`;
+                inquiriesEl.innerHTML = html;
+            } catch (err) {
+                console.error(err);
+                inquiriesEl.innerHTML = '<p style="text-align: center; padding: 20px; color: var(--danger);">Failed to load stats. API server offline.</p>';
+            }
+        }
+
+        // 2. PRODUCTS CRUD
+        let categoriesCache = [];
+        async function populateCategoriesList() {
+            try {
+                const res = await fetch(`${API_URL}/api/categories/`);
+                const cats = await res.json();
+                categoriesCache = cats;
+                const selectEl = document.getElementById('p_category');
+                selectEl.innerHTML = '';
+                cats.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.id;
+                    opt.textContent = c.name;
+                    selectEl.appendChild(opt);
+                });
+            } catch (err) {
+                console.warn('Failed to load categories', err);
+            }
+        }
+
+        async function loadProducts() {
+            const el = document.getElementById('productsContainer');
+            el.innerHTML = '<div class="loading-box"><div class="spinner"></div><p>Fetching products...</p></div>';
+            try {
+                const res = await fetch(`${API_URL}/api/products/`);
+                const prods = await res.json();
+                if (prods.length === 0) {
+                    el.innerHTML = '<div class="loading-box"><p>No products in catalog.</p></div>';
+                    return;
+                }
+                let html = `<table class="table">
+                    <thead>
+                        <tr>
+                            <th>Preview</th>
+                            <th>Product Name</th>
+                            <th>Category</th>
+                            <th>MOQ</th>
+                            <th>Base Price</th>
+                            <th>Origin</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+                prods.forEach(p => {
+                    html += `<tr>
+                        <td><img src="${p.primary_image_url || 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&q=80&w=100'}" class="crop-thumbnail" alt=""></td>
+                        <td><strong>${p.name}</strong></td>
+                        <td>${p.category_name}</td>
+                        <td>${p.moq}</td>
+                        <td><strong style="color: var(--primary);">₹${Number(p.base_price_inr).toLocaleString()} per ${p.price_unit}</strong></td>
+                        <td>${p.origin}</td>
+                        <td>
+                            <button class="action-btn" onclick="editProduct('${p.slug}')">Edit</button>
+                            <button class="action-btn delete" onclick="deleteProduct('${p.slug}')">Delete</button>
+                        </td>
+                    </tr>`;
+                });
+                html += '</tbody></table>';
+                el.innerHTML = html;
+            } catch (err) {
+                el.innerHTML = '<div class="loading-box"><p style="color: var(--danger);">Failed to connect to API.</p></div>';
+            }
+        }
+
+        async function editProduct(slug) {
+            try {
+                const res = await fetch(`${API_URL}/api/products/${slug}/`);
+                const p = await res.json();
+                currentEditingSlug = p.slug;
+                
+                document.getElementById('p_name').value = p.name;
+                document.getElementById('p_category').value = p.category;
+                document.getElementById('p_description').value = p.description;
+                document.getElementById('p_origin').value = p.origin;
+                document.getElementById('p_quality_grade').value = p.quality_grade;
+                document.getElementById('p_moq').value = p.moq;
+                document.getElementById('p_packaging_type').value = p.packaging_type;
+                document.getElementById('p_shelf_life').value = p.shelf_life;
+                document.getElementById('p_base_price_inr').value = p.base_price_inr;
+                document.getElementById('p_price_unit').value = p.price_unit;
+                document.getElementById('p_primary_image_url').value = p.primary_image_url || '';
+                
+                const fileInput = document.getElementById('p_primary_image');
+                if (fileInput) fileInput.value = '';
+
+                document.getElementById('productFormTitle').textContent = 'Modify Product Specifications';
+                openModal('productModal');
+            } catch (err) {
+                alert('Could not fetch product details.');
+            }
+        }
+
+        async function saveProduct(e) {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            formData.append('category', document.getElementById('p_category').value);
+            formData.append('name', document.getElementById('p_name').value);
+            formData.append('description', document.getElementById('p_description').value);
+            formData.append('origin', document.getElementById('p_origin').value);
+            formData.append('quality_grade', document.getElementById('p_quality_grade').value);
+            formData.append('moq', document.getElementById('p_moq').value);
+            formData.append('packaging_type', document.getElementById('p_packaging_type').value);
+            formData.append('shelf_life', document.getElementById('p_shelf_life').value);
+            formData.append('base_price_inr', parseFloat(document.getElementById('p_base_price_inr').value));
+            formData.append('price_unit', document.getElementById('p_price_unit').value);
+            formData.append('primary_image_url', document.getElementById('p_primary_image_url').value);
+
+            const fileInput = document.getElementById('p_primary_image');
+            if (fileInput && fileInput.files.length > 0) {
+                formData.append('primary_image', fileInput.files[0]);
+            }
+
+            let endpoint = `${API_URL}/api/products/`;
+            let method = 'POST';
+            if (currentEditingSlug) {
+                endpoint += `${currentEditingSlug}/`;
+                // Because of the multipart/form-data limitation for PUT/PATCH in Django,
+                // we send all FormData updates as a POST method to the detail endpoint.
+                method = 'POST';
+            }
+
+            const token = sessionStorage.getItem('admin_token');
+            const headers = {};
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+
+            try {
+                const res = await fetch(endpoint, {
+                    method,
+                    headers,
+                    body: formData
+                });
+                if (res.status === 401) return logout();
+                if (res.ok) {
+                    closeModal('productModal');
+                    loadProducts();
+                } else {
+                    const err = await res.json();
+                    alert('Error saving product details: ' + JSON.stringify(err));
+                }
+            } catch (err) {
+                alert('Failed to connect to API server.');
+            }
+        }
+
+        async function deleteProduct(slug) {
+            if (!confirm('Are you sure you want to delete this product? This will remove all associated statistics.')) return;
+            try {
+                const res = await fetch(`${API_URL}/api/products/${slug}/`, {
+                    method: 'DELETE',
+                    headers: getAuthHeaders()
+                });
+                if (res.status === 401) return logout();
+                if (res.ok) loadProducts();
+            } catch (err) {
+                alert('Delete operation failed.');
+            }
+        }
+
+        // 3. INQUIRIES MANAGEMENT
+        async function loadInquiries() {
+            const el = document.getElementById('inquiriesContainer');
+            el.innerHTML = '<div class="loading-box"><div class="spinner"></div><p>Fetching inquiries inbox...</p></div>';
+            try {
+                const res = await fetch(`${API_URL}/api/inquiries/`, { headers: getAuthHeaders() });
+                if (res.status === 401) return logout();
+                const inqs = await res.json();
+                if (inqs.length === 0) {
+                    el.innerHTML = '<div class="loading-box"><p>No inquiries found.</p></div>';
+                    return;
+                }
+
+                let html = `<table class="table">
+                    <thead>
+                        <tr>
+                            <th>Sender Info</th>
+                            <th>Product Target</th>
+                            <th>Volume / Port</th>
+                            <th>Message</th>
+                            <th>Status Control</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+                inqs.forEach(inq => {
+                    html += `<tr>
+                        <td>
+                            <strong>${inq.full_name}</strong><br>
+                            <span style="font-size: 11px; color: var(--text-light);">${inq.company || 'Private Buyer'}</span><br>
+                            <small style="color: var(--text-light); font-family: monospace;">${inq.email} | ${inq.phone}</small>
+                        </td>
+                        <td><strong style="color: var(--primary);">${inq.product_name}</strong></td>
+                        <td><strong>${inq.quantity}</strong><br><small style="color: var(--text-light);">${inq.shipping_terms} | ${inq.destination_port}</small></td>
+                        <td style="max-width: 250px;"><p style="font-size: 12px; font-family: monospace; white-space: pre-wrap; background: var(--bg); padding: 8px; border-radius: 6px; border: 1px solid var(--border);">${inq.message}</p></td>
+                        <td>
+                            <select onchange="updateInqStatus(${inq.id}, this.value)" style="padding: 6px; border-radius: 6px; font-size: 11px; font-weight: bold; background: white; border: 1px solid var(--border);">
+                                <option value="new" ${inq.status === 'new' ? 'selected' : ''}>New / Unread</option>
+                                <option value="contacted" ${inq.status === 'contacted' ? 'selected' : ''}>Contacted</option>
+                                <option value="completed" ${inq.status === 'completed' ? 'selected' : ''}>Completed</option>
+                            </select>
+                        </td>
+                        <td>
+                            <button class="action-btn delete" onclick="deleteInq(${inq.id})">Delete</button>
+                        </td>
+                    </tr>`;
+                });
+                html += '</tbody></table>';
+                el.innerHTML = html;
+            } catch (err) {
+                el.innerHTML = '<div class="loading-box"><p style="color: var(--danger);">Failed to load inquiries list.</p></div>';
+            }
+        }
+
+        async function updateInqStatus(id, val) {
+            try {
+                const res = await fetch(`${API_URL}/api/inquiries/${id}/`, {
+                    method: 'PATCH',
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify({ status: val })
+                });
+                if (res.status === 401) return logout();
+            } catch (err) {
+                alert('Status update failed.');
+            }
+        }
+
+        async function deleteInq(id) {
+            if (!confirm('Are you sure you want to delete this inquiry permanently?')) return;
+            try {
+                const res = await fetch(`${API_URL}/api/inquiries/${id}/`, {
+                    method: 'DELETE',
+                    headers: getAuthHeaders()
+                });
+                if (res.status === 401) return logout();
+                if (res.ok) loadInquiries();
+            } catch (err) {
+                alert('Delete operation failed.');
+            }
+        }
+
+        // 4. BLOGS CRUD
+        async function loadBlogs() {
+            const el = document.getElementById('blogsContainer');
+            el.innerHTML = '<div class="loading-box"><div class="spinner"></div><p>Fetching blogs...</p></div>';
+            try {
+                const res = await fetch(`${API_URL}/api/blogs/`);
+                const blogs = await res.json();
+                if (blogs.length === 0) {
+                    el.innerHTML = '<div class="loading-box"><p>No blog posts found.</p></div>';
+                    return;
+                }
+                let html = `<table class="table">
+                    <thead>
+                        <tr>
+                            <th>Cover</th>
+                            <th>Article Title</th>
+                            <th>Author</th>
+                            <th>Published Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+                blogs.forEach(b => {
+                    html += `<tr>
+                        <td><img src="${b.banner_image_url || 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&q=80&w=100'}" class="crop-thumbnail"></td>
+                        <td><strong>${b.title}</strong></td>
+                        <td>${b.author}</td>
+                        <td>${new Date(b.created_at).toLocaleDateString()}</td>
+                        <td>
+                            <button class="action-btn" onclick="editBlog('${b.slug}')">Edit</button>
+                            <button class="action-btn delete" onclick="deleteBlog('${b.slug}')">Delete</button>
+                        </td>
+                    </tr>`;
+                });
+                html += '</tbody></table>';
+                el.innerHTML = html;
+            } catch (err) {
+                el.innerHTML = '<div class="loading-box"><p style="color: var(--danger);">Failed to load blogs.</p></div>';
+            }
+        }
+
+        async function editBlog(slug) {
+            try {
+                const res = await fetch(`${API_URL}/api/blogs/${slug}/`);
+                const b = await res.json();
+                currentEditingSlug = b.slug;
+                
+                document.getElementById('b_title').value = b.title;
+                document.getElementById('b_author').value = b.author;
+                document.getElementById('b_content').value = b.content;
+                document.getElementById('b_banner_image_url').value = b.banner_image_url || '';
+
+                document.getElementById('blogFormTitle').textContent = 'Modify Blog Article';
+                openModal('blogModal');
+            } catch (err) {
+                alert('Could not fetch blog article details.');
+            }
+        }
+
+        async function saveBlog(e) {
+            e.preventDefault();
+            const payload = {
+                title: document.getElementById('b_title').value,
+                author: document.getElementById('b_author').value,
+                content: document.getElementById('b_content').value,
+                banner_image_url: document.getElementById('b_banner_image_url').value
+            };
+
+            let endpoint = `${API_URL}/api/blogs/`;
+            let method = 'POST';
+            if (currentEditingSlug) {
+                endpoint += `${currentEditingSlug}/`;
+                method = 'PATCH';
+            }
+
+            try {
+                const res = await fetch(endpoint, {
+                    method,
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify(payload)
+                });
+                if (res.status === 401) return logout();
+                if (res.ok) {
+                    closeModal('blogModal');
+                    loadBlogs();
+                } else {
+                    const err = await res.json();
+                    alert('Error saving blog: ' + JSON.stringify(err));
+                }
+            } catch (err) {
+                alert('API server connection error.');
+            }
+        }
+
+        async function deleteBlog(slug) {
+            if (!confirm('Are you sure you want to delete this article?')) return;
+            try {
+                const res = await fetch(`${API_URL}/api/blogs/${slug}/`, {
+                    method: 'DELETE',
+                    headers: getAuthHeaders()
+                });
+                if (res.status === 401) return logout();
+                if (res.ok) loadBlogs();
+            } catch (err) {
+                alert('Delete operation failed.');
+            }
+        }
+
+        // 5. HOMEPAGE BANNERS CRUD
+        async function loadBanners() {
+            const el = document.getElementById('bannersContainer');
+            el.innerHTML = '<div class="loading-box"><div class="spinner"></div><p>Fetching banners...</p></div>';
+            try {
+                const res = await fetch(`${API_URL}/api/banners/`);
+                const banners = await res.json();
+                if (banners.length === 0) {
+                    el.innerHTML = '<div class="loading-box"><p>No banners found.</p></div>';
+                    return;
+                }
+                let html = `<table class="table">
+                    <thead>
+                        <tr>
+                            <th>Slide Preview</th>
+                            <th>Slide Title</th>
+                            <th>Subtitle</th>
+                            <th>Link Route</th>
+                            <th>Order</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+                banners.forEach(b => {
+                    html += `<tr>
+                        <td><img src="${b.image_url || 'https://images.unsplash.com/photo-1595079676339-1534801ad6cf?auto=format&fit=crop&q=80&w=100'}" class="crop-thumbnail"></td>
+                        <td><strong>${b.title}</strong></td>
+                        <td>${b.subtitle || '-'}</td>
+                        <td><span style="font-family: monospace; color: var(--primary);">${b.link}</span></td>
+                        <td>${b.display_order}</td>
+                        <td><span class="status-badge ${b.active !== false ? 'completed' : 'new'}">${b.active !== false ? 'Active' : 'Inactive'}</span></td>
+                        <td>
+                            <button class="action-btn" onclick="editBanner(${b.id})">Edit</button>
+                            <button class="action-btn delete" onclick="deleteBanner(${b.id})">Delete</button>
+                        </td>
+                    </tr>`;
+                });
+                html += '</tbody></table>';
+                el.innerHTML = html;
+            } catch (err) {
+                el.innerHTML = '<div class="loading-box"><p style="color: var(--danger);">Failed to load banners.</p></div>';
+            }
+        }
+
+        async function editBanner(id) {
+            try {
+                const res = await fetch(`${API_URL}/api/banners/${id}/`, { headers: getAuthHeaders() });
+                const b = await res.json();
+                currentEditingId = b.id;
+                
+                document.getElementById('bn_title').value = b.title;
+                document.getElementById('bn_subtitle').value = b.subtitle || '';
+                document.getElementById('bn_link').value = b.link;
+                document.getElementById('bn_display_order').value = b.display_order;
+                document.getElementById('bn_image_url').value = b.image_url || '';
+                document.getElementById('bn_active').checked = b.active !== false;
+
+                document.getElementById('bannerFormTitle').textContent = 'Modify Homepage Slide';
+                openModal('bannerModal');
+            } catch (err) {
+                alert('Could not fetch banner details.');
+            }
+        }
+
+        async function saveBanner(e) {
+            e.preventDefault();
+            const payload = {
+                title: document.getElementById('bn_title').value,
+                subtitle: document.getElementById('bn_subtitle').value,
+                link: document.getElementById('bn_link').value,
+                display_order: parseInt(document.getElementById('bn_display_order').value) || 0,
+                image_url: document.getElementById('bn_image_url').value,
+                active: document.getElementById('bn_active').checked
+            };
+
+            let endpoint = `${API_URL}/api/banners/`;
+            let method = 'POST';
+            if (currentEditingId) {
+                endpoint += `${currentEditingId}/`;
+                method = 'PATCH';
+            }
+
+            try {
+                const res = await fetch(endpoint, {
+                    method,
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify(payload)
+                });
+                if (res.status === 401) return logout();
+                if (res.ok) {
+                    closeModal('bannerModal');
+                    loadBanners();
+                } else {
+                    const err = await res.json();
+                    alert('Error saving banner: ' + JSON.stringify(err));
+                }
+            } catch (err) {
+                alert('API server connection error.');
+            }
+        }
+
+        async function deleteBanner(id) {
+            if (!confirm('Are you sure you want to delete this slide banner?')) return;
+            try {
+                const res = await fetch(`${API_URL}/api/banners/${id}/`, {
+                    method: 'DELETE',
+                    headers: getAuthHeaders()
+                });
+                if (res.status === 401) return logout();
+                if (res.ok) loadBanners();
+            } catch (err) {
+                alert('Delete operation failed.');
+            }
+        }
+
+        // 6. TESTIMONIALS CRUD
+        async function loadTestimonials() {
+            const el = document.getElementById('testimonialsContainer');
+            el.innerHTML = '<div class="loading-box"><div class="spinner"></div><p>Fetching testimonials...</p></div>';
+            try {
+                const res = await fetch(`${API_URL}/api/testimonials/`);
+                const testimonials = await res.json();
+                if (testimonials.length === 0) {
+                    el.innerHTML = '<div class="loading-box"><p>No testimonials found.</p></div>';
+                    return;
+                }
+                let html = `<table class="table">
+                    <thead>
+                        <tr>
+                            <th>Avatar</th>
+                            <th>Client Name</th>
+                            <th>Designation / Company</th>
+                            <th>Feedback Review</th>
+                            <th>Rating</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+                testimonials.forEach(t => {
+                    html += `<tr>
+                        <td><img src="${t.profile_image_url || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=facearea&facepad=2&w=100&h=100&q=80'}" class="crop-thumbnail" style="border-radius: 50%;"></td>
+                        <td><strong>${t.author_name}</strong></td>
+                        <td>${t.role}<br><small style="color: var(--text-light);">${t.company}</small></td>
+                        <td style="max-width: 250px;"><p style="font-size: 12px; font-style: italic; color: var(--text-light);">"${t.review}"</p></td>
+                        <td><strong style="color: var(--primary);">${'★'.repeat(t.rating)}</strong></td>
+                        <td>
+                            <button class="action-btn" onclick="editTestimonial(${t.id})">Edit</button>
+                            <button class="action-btn delete" onclick="deleteTestimonial(${t.id})">Delete</button>
+                        </td>
+                    </tr>`;
+                });
+                html += '</tbody></table>';
+                el.innerHTML = html;
+            } catch (err) {
+                el.innerHTML = '<div class="loading-box"><p style="color: var(--danger);">Failed to load testimonials.</p></div>';
+            }
+        }
+
+        async function editTestimonial(id) {
+            try {
+                const res = await fetch(`${API_URL}/api/testimonials/${id}/`, { headers: getAuthHeaders() });
+                const t = await res.json();
+                currentEditingId = t.id;
+                
+                document.getElementById('t_author_name').value = t.author_name;
+                document.getElementById('t_company').value = t.company;
+                document.getElementById('t_role').value = t.role;
+                document.getElementById('t_rating').value = t.rating;
+                document.getElementById('t_display_order').value = t.display_order;
+                document.getElementById('t_review').value = t.review;
+                document.getElementById('t_profile_image_url').value = t.profile_image_url || '';
+
+                document.getElementById('testimonialFormTitle').textContent = 'Modify Client Testimonial';
+                openModal('testimonialModal');
+            } catch (err) {
+                alert('Could not fetch testimonial details.');
+            }
+        }
+
+        async function saveTestimonial(e) {
+            e.preventDefault();
+            const payload = {
+                author_name: document.getElementById('t_author_name').value,
+                company: document.getElementById('t_company').value,
+                role: document.getElementById('t_role').value,
+                rating: parseInt(document.getElementById('t_rating').value) || 5,
+                display_order: parseInt(document.getElementById('t_display_order').value) || 0,
+                review: document.getElementById('t_review').value,
+                profile_image_url: document.getElementById('t_profile_image_url').value
+            };
+
+            let endpoint = `${API_URL}/api/testimonials/`;
+            let method = 'POST';
+            if (currentEditingId) {
+                endpoint += `${currentEditingId}/`;
+                method = 'PATCH';
+            }
+
+            try {
+                const res = await fetch(endpoint, {
+                    method,
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify(payload)
+                });
+                if (res.status === 401) return logout();
+                if (res.ok) {
+                    closeModal('testimonialModal');
+                    loadTestimonials();
+                } else {
+                    const err = await res.json();
+                    alert('Error saving testimonial: ' + JSON.stringify(err));
+                }
+            } catch (err) {
+                alert('API server connection error.');
+            }
+        }
+
+        async function deleteTestimonial(id) {
+            if (!confirm('Are you sure you want to delete this testimonial?')) return;
+            try {
+                const res = await fetch(`${API_URL}/api/testimonials/${id}/`, {
+                    method: 'DELETE',
+                    headers: getAuthHeaders()
+                });
+                if (res.status === 401) return logout();
+                if (res.ok) loadTestimonials();
+            } catch (err) {
+                alert('Delete operation failed.');
+            }
+        }
+
+        // 7. CERTIFICATIONS CRUD
+        async function loadCertifications() {
+            const el = document.getElementById('certificationsContainer');
+            el.innerHTML = '<div class="loading-box"><div class="spinner"></div><p>Fetching certifications...</p></div>';
+            try {
+                const res = await fetch(`${API_URL}/api/certifications/`);
+                const certs = await res.json();
+                if (certs.length === 0) {
+                    el.innerHTML = '<div class="loading-box"><p>No certifications found.</p></div>';
+                    return;
+                }
+                let html = `<table class="table">
+                    <thead>
+                        <tr>
+                            <th>Logo</th>
+                            <th>Certificate Name</th>
+                            <th>Authority</th>
+                            <th>Description</th>
+                            <th>Order</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+                certs.forEach(c => {
+                    html += `<tr>
+                        <td><img src="${c.logo_url || 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&q=80&w=100'}" class="crop-thumbnail"></td>
+                        <td><strong>${c.name}</strong></td>
+                        <td>${c.certificate_authority || '-'}</td>
+                        <td>${c.description || '-'}</td>
+                        <td>${c.display_order}</td>
+                        <td>
+                            <button class="action-btn" onclick="editCertification(${c.id})">Edit</button>
+                            <button class="action-btn delete" onclick="deleteCertification(${c.id})">Delete</button>
+                        </td>
+                    </tr>`;
+                });
+                html += '</tbody></table>';
+                el.innerHTML = html;
+            } catch (err) {
+                el.innerHTML = '<div class="loading-box"><p style="color: var(--danger);">Failed to load certifications.</p></div>';
+            }
+        }
+
+        async function editCertification(id) {
+            try {
+                const res = await fetch(`${API_URL}/api/certifications/${id}/`, { headers: getAuthHeaders() });
+                const c = await res.json();
+                currentEditingId = c.id;
+                
+                document.getElementById('c_name').value = c.name;
+                document.getElementById('c_certificate_authority').value = c.certificate_authority || '';
+                document.getElementById('c_display_order').value = c.display_order;
+                document.getElementById('c_description').value = c.description || '';
+                document.getElementById('c_logo_url').value = c.logo_url || '';
+
+                document.getElementById('certificationFormTitle').textContent = 'Modify Compliance Certificate';
+                openModal('certificationModal');
+            } catch (err) {
+                alert('Could not fetch certification details.');
+            }
+        }
+
+        async function saveCertification(e) {
+            e.preventDefault();
+            const payload = {
+                name: document.getElementById('c_name').value,
+                certificate_authority: document.getElementById('c_certificate_authority').value,
+                display_order: parseInt(document.getElementById('c_display_order').value) || 0,
+                description: document.getElementById('c_description').value,
+                logo_url: document.getElementById('c_logo_url').value
+            };
+
+            let endpoint = `${API_URL}/api/certifications/`;
+            let method = 'POST';
+            if (currentEditingId) {
+                endpoint += `${currentEditingId}/`;
+                method = 'PATCH';
+            }
+
+            try {
+                const res = await fetch(endpoint, {
+                    method,
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify(payload)
+                });
+                if (res.status === 401) return logout();
+                if (res.ok) {
+                    closeModal('certificationModal');
+                    loadCertifications();
+                } else {
+                    const err = await res.json();
+                    alert('Error saving certification: ' + JSON.stringify(err));
+                }
+            } catch (err) {
+                alert('API server connection error.');
+            }
+        }
+
+        async function deleteCertification(id) {
+            if (!confirm('Are you sure you want to delete this certification?')) return;
+            try {
+                const res = await fetch(`${API_URL}/api/certifications/${id}/`, {
+                    method: 'DELETE',
+                    headers: getAuthHeaders()
+                });
+                if (res.status === 401) return logout();
+                if (res.ok) loadCertifications();
+            } catch (err) {
+                alert('Delete operation failed.');
+            }
+        }
+
+        // GLOBAL MODAL TRIGGERS
+        function openModal(id) {
+            document.getElementById(id).style.display = 'flex';
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+            currentEditingId = null;
+            currentEditingSlug = null;
+        }
+
+        function triggerAddModal() {
+            currentEditingId = null;
+            currentEditingSlug = null;
+            
+            if (currentTab === 'products') {
+                document.getElementById('productForm').reset();
+                document.getElementById('productFormTitle').textContent = 'New Catalog Product';
+                openModal('productModal');
+            } else if (currentTab === 'blogs') {
+                document.getElementById('blogForm').reset();
+                document.getElementById('blogFormTitle').textContent = 'New Blog Article';
+                openModal('blogModal');
+            } else if (currentTab === 'banners') {
+                document.getElementById('bannerForm').reset();
+                document.getElementById('bannerFormTitle').textContent = 'New Homepage Slide';
+                openModal('bannerModal');
+            } else if (currentTab === 'testimonials') {
+                document.getElementById('testimonialForm').reset();
+                document.getElementById('testimonialFormTitle').textContent = 'New Client Testimonial';
+                openModal('testimonialModal');
+            } else if (currentTab === 'certifications') {
+                document.getElementById('certificationForm').reset();
+                document.getElementById('certificationFormTitle').textContent = 'New Compliance Certificate';
+                openModal('certificationModal');
+            }
+        }
+
+        // ============================================================
+        // CATEGORIES (PRODUCT DIVISIONS) CRUD
+        // ============================================================
+        let currentEditingCategorySlug = null;
+
+        async function loadCategories() {
+            const el = document.getElementById('categoriesContainer');
+            el.innerHTML = '<div class="loading-box"><div class="spinner"></div><p>Fetching product divisions...</p></div>';
+            try {
+                const res = await fetch(`${API_URL}/api/categories/`);
+                const cats = await res.json();
+                if (!cats.length) {
+                    el.innerHTML = '<div class="loading-box"><p>No product divisions found.</p></div>';
+                    return;
+                }
+
+                // Card grid layout for visual image management
+                let html = `<div style="display:grid; grid-template-columns: repeat(auto-fill,minmax(260px,1fr)); gap:20px; padding:4px 0;">`;
+                cats.forEach(cat => {
+                    const imgSrc = cat.image_url || 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&q=80&w=600';
+                    html += `
+                        <div style="background:white; border:1px solid var(--border); border-radius:14px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.06); transition:box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 4px 16px rgba(0,0,0,0.12)'" onmouseout="this.style.boxShadow='0 1px 3px rgba(0,0,0,0.06)'">
+                            <!-- Image preview -->
+                            <div style="position:relative; height:160px; background:#f1f5f9; overflow:hidden;">
+                                <img src="${imgSrc}" alt="${cat.name}" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&q=80&w=600'">
+                                <div style="position:absolute; inset:0; background:linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 60%);"></div>
+                                <span style="position:absolute; bottom:8px; left:10px; color:white; font-weight:800; font-size:13px; text-shadow:0 1px 3px rgba(0,0,0,0.5);">${cat.name}</span>
+                            </div>
+                            <!-- Card footer -->
+                            <div style="padding:14px 16px; display:flex; flex-direction:column; gap:8px;">
+                                <p style="font-size:11px; color:var(--text-light); line-clamp:2; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;">${cat.description || 'No description set'}</p>
+                                <div style="display:flex; gap:8px; padding-top:4px;">
+                                    <button class="action-btn" style="flex:1;" onclick="editCategory('${cat.slug}')">🖼️ Change Image</button>
+                                    <button class="action-btn delete" onclick="deleteCategory('${cat.slug}')">Delete</button>
+                                </div>
+                            </div>
+                        </div>`;
+                });
+                html += `</div>`;
+                el.innerHTML = html;
+            } catch (err) {
+                el.innerHTML = '<div class="loading-box"><p style="color:var(--danger);">Failed to connect to API.</p></div>';
+            }
+        }
+
+        async function editCategory(slug) {
+            try {
+                const res = await fetch(`${API_URL}/api/categories/${slug}/`);
+                const cat = await res.json();
+                currentEditingCategorySlug = cat.slug;
+
+                document.getElementById('cat_name').value = cat.name;
+                document.getElementById('cat_description').value = cat.description || '';
+                document.getElementById('cat_image_url').value = '';
+                const fileInput = document.getElementById('cat_image_file');
+                if (fileInput) fileInput.value = '';
+
+                // Show current image preview
+                const previewBox = document.getElementById('catImagePreviewBox');
+                const previewImg = document.getElementById('catImagePreview');
+                if (cat.image_url) {
+                    previewImg.src = cat.image_url;
+                    previewBox.style.display = 'block';
+                } else {
+                    previewBox.style.display = 'none';
+                }
+
+                document.getElementById('categoryFormTitle').textContent = `Edit: ${cat.name}`;
+                openModal('categoryModal');
+            } catch (err) {
+                alert('Could not fetch division details.');
+            }
+        }
+
+        function previewCatImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const previewBox = document.getElementById('catImagePreviewBox');
+                    const previewImg = document.getElementById('catImagePreview');
+                    previewImg.src = e.target.result;
+                    previewBox.style.display = 'block';
+                };
+                reader.readAsDataURL(input.files[0]);
+                // Clear URL field since a file takes priority
+                document.getElementById('cat_image_url').value = '';
+            }
+        }
+
+        function previewCatImageUrl(url) {
+            if (url) {
+                const previewBox = document.getElementById('catImagePreviewBox');
+                const previewImg = document.getElementById('catImagePreview');
+                previewImg.src = url;
+                previewBox.style.display = 'block';
+                // Clear file input since URL takes priority
+                const fileInput = document.getElementById('cat_image_file');
+                if (fileInput) fileInput.value = '';
+            }
+        }
+
+        async function saveCategory(e) {
+            e.preventDefault();
+
+            const formData = new FormData();
+            formData.append('name', document.getElementById('cat_name').value);
+            formData.append('description', document.getElementById('cat_description').value);
+
+            const fileInput = document.getElementById('cat_image_file');
+            const imageUrl = document.getElementById('cat_image_url').value;
+
+            if (fileInput && fileInput.files.length > 0) {
+                formData.append('image', fileInput.files[0]);
+            } else if (imageUrl) {
+                formData.append('image_url', imageUrl);
+            }
+
+            const token = sessionStorage.getItem('admin_token');
+            const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+
+            const endpoint = `${API_URL}/api/categories/${currentEditingCategorySlug}/`;
+
+            try {
+                const res = await fetch(endpoint, {
+                    method: 'POST',
+                    headers,
+                    body: formData
+                });
+                if (res.status === 401) return logout();
+                if (res.ok) {
+                    closeModal('categoryModal');
+                    loadCategories();
+                } else {
+                    const err = await res.json();
+                    alert('Error saving division: ' + JSON.stringify(err));
+                }
+            } catch (err) {
+                alert('Failed to connect to API server.');
+            }
+        }
+
+        async function deleteCategory(slug) {
+            if (!confirm('Delete this product division? Products in this category will also be removed.')) return;
+            try {
+                const res = await fetch(`${API_URL}/api/categories/${slug}/`, {
+                    method: 'DELETE',
+                    headers: getAuthHeaders()
+                });
+                if (res.status === 401) return logout();
+                if (res.ok) loadCategories();
+            } catch (err) {
+                alert('Delete operation failed.');
+            }
+        }
+
+    </script>
+</body>
+</html>

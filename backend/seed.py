@@ -1,4 +1,4 @@
-﻿import os
+import os
 import django
 from decimal import Decimal
 
@@ -29,6 +29,7 @@ def seed_database():
     Certification.objects.all().delete()
     Testimonial.objects.all().delete()
     HomepageBanner.objects.all().delete()
+    BlogPost.objects.all().delete()
     print("Cleared old records...")
 
     # 2. Create Categories

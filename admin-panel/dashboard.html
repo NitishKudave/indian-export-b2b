@@ -470,13 +470,85 @@
             object-fit: cover;
             border: 1px solid var(--border);
         }
+
+        /* Mobile Responsiveness */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 24px;
+            cursor: pointer;
+            padding-right: 12px;
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 99;
+            backdrop-filter: blur(2px);
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: -260px;
+                height: 100vh;
+                z-index: 100;
+                transition: left 0.3s ease;
+            }
+            .sidebar.show {
+                left: 0;
+            }
+            .sidebar-overlay.show {
+                display: block;
+            }
+            .topbar {
+                padding: 16px;
+                justify-content: flex-start;
+                gap: 8px;
+            }
+            .topbar h1 {
+                font-size: 16px;
+                flex-grow: 1;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .section-card {
+                padding: 16px;
+                overflow-x: auto;
+            }
+            .table th, .table td {
+                white-space: nowrap;
+            }
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            .action-header-btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
     </style>
 </head>
 <body>
 
     <div class="wrapper">
+        <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
         <!-- Sidebar Navigation -->
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
             <div class="sidebar-brand">
                 <div class="brand-logo">O</div>
                 <div class="brand-text">
@@ -510,6 +582,7 @@
         <main class="main">
             <!-- Sticky Top bar -->
             <div class="topbar">
+                <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
                 <h1 id="pageTitle">Overview Management</h1>
                 <button class="action-header-btn" id="actionHeaderBtn" style="display: none;" onclick="triggerAddModal()">+ Add New Item</button>
             </div>
@@ -919,6 +992,13 @@
         let currentTab = 'overview';
         let currentEditingId = null;
         let currentEditingSlug = null;
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('show');
+            overlay.classList.toggle('show');
+        }
 
         function getAuthHeaders() {
             const token = sessionStorage.getItem('admin_token');

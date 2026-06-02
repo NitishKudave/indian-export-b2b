@@ -1,4 +1,4 @@
-﻿import json
+import json
 import time
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -89,8 +89,26 @@ def api_root(request):
 @csrf_exempt
 def login_view(request):
     if request.method != 'POST':
-        return JsonResponse({'detail': 'Method not allowed'}, status=452)
+        return JsonResponse({'detail': 'Method not allowed'}, status=405)
         
+    # Get client IP for security lockout
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+        
+    cache_key = f"login_failures_{ip}"
+    failures = cache.get(cache_key, [])
+    now = time.time()
+    
+    # Filter failures in the last 5 minutes (300 seconds)
+    failures = [f for f in failures if now - f < 300]
+    
+    if len(failures) >= 5:
+        # Lockout triggered!
+        return JsonResponse({'detail': 'Security Lockout: Too many failed login attempts. Please wait 5 minutes.'}, status=429)
+
     try:
         data = json.loads(request.body)
         username = data.get('username')
@@ -100,6 +118,9 @@ def login_view(request):
         
     user = authenticate(username=username, password=password)
     if user is not None and user.is_staff:
+        # Successful login: clear failure cache
+        cache.delete(cache_key)
+        
         # Generate JWT
         payload = {
             'user_id': user.id,
@@ -113,7 +134,10 @@ def login_view(request):
             'is_staff': user.is_staff
         })
     else:
-        return JsonResponse({'detail': 'No active account found with the given credentials'}, status=401)
+        # Failed login: record failure
+        failures.append(now)
+        cache.set(cache_key, failures, 300)
+        return JsonResponse({'detail': 'Invalid credentials. Attempt recorded.'}, status=401)
 
 # ADMIN TOKEN VERIFICATION ENDPOINT
 @admin_required

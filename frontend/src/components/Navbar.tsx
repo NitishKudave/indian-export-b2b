@@ -90,6 +90,9 @@ export default function Navbar() {
                 <option value="INR" className="bg-slate-900 text-white">INR (₹)</option>
                 <option value="EUR" className="bg-slate-900 text-white">EUR (€)</option>
                 <option value="AED" className="bg-slate-900 text-white">AED (د.إ)</option>
+                <option value="GBP" className="bg-slate-900 text-white">GBP (£)</option>
+                <option value="SAR" className="bg-slate-900 text-white">SAR (ر.س)</option>
+                <option value="RUB" className="bg-slate-900 text-white">RUB (₽)</option>
               </select>
             </div>
 
@@ -113,6 +116,9 @@ export default function Navbar() {
               <option value="INR">INR</option>
               <option value="EUR">EUR</option>
               <option value="AED">AED</option>
+              <option value="GBP">GBP</option>
+              <option value="SAR">SAR</option>
+              <option value="RUB">RUB</option>
             </select>
 
             <button

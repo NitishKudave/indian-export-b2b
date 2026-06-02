@@ -93,6 +93,14 @@ export default function Navbar() {
                 <option value="GBP" className="bg-slate-900 text-white">GBP (£)</option>
                 <option value="SAR" className="bg-slate-900 text-white">SAR (ر.س)</option>
                 <option value="RUB" className="bg-slate-900 text-white">RUB (₽)</option>
+                <option value="AUD" className="bg-slate-900 text-white">AUD (A$)</option>
+                <option value="CAD" className="bg-slate-900 text-white">CAD (C$)</option>
+                <option value="SGD" className="bg-slate-900 text-white">SGD (S$)</option>
+                <option value="JPY" className="bg-slate-900 text-white">JPY (¥)</option>
+                <option value="CNY" className="bg-slate-900 text-white">CNY (¥)</option>
+                <option value="ZAR" className="bg-slate-900 text-white">ZAR (R)</option>
+                <option value="MYR" className="bg-slate-900 text-white">MYR (RM)</option>
+                <option value="THB" className="bg-slate-900 text-white">THB (฿)</option>
               </select>
             </div>
 
@@ -119,6 +127,14 @@ export default function Navbar() {
               <option value="GBP">GBP</option>
               <option value="SAR">SAR</option>
               <option value="RUB">RUB</option>
+              <option value="AUD">AUD</option>
+              <option value="CAD">CAD</option>
+              <option value="SGD">SGD</option>
+              <option value="JPY">JPY</option>
+              <option value="CNY">CNY</option>
+              <option value="ZAR">ZAR</option>
+              <option value="MYR">MYR</option>
+              <option value="THB">THB</option>
             </select>
 
             <button

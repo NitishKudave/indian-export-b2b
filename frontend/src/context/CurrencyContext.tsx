@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 
-type Currency = "INR" | "USD" | "EUR" | "AED" | "GBP" | "SAR" | "RUB";
+type Currency = "INR" | "USD" | "EUR" | "AED" | "GBP" | "SAR" | "RUB" | "AUD" | "CAD" | "SGD" | "JPY" | "CNY" | "ZAR" | "MYR" | "THB";
 
 interface CurrencyContextType {
   currency: Currency;
@@ -18,6 +18,14 @@ const rates: Record<Currency, number> = {
   GBP: 0.0094,   // 1 INR = 0.0094 GBP (Approx 106 INR/GBP)
   SAR: 0.045,    // 1 INR = 0.045 SAR (Approx 22.2 INR/SAR)
   RUB: 1.08,     // 1 INR = 1.08 RUB (Approx 0.92 INR/RUB)
+  AUD: 0.018,
+  CAD: 0.016,
+  SGD: 0.016,
+  JPY: 1.88,
+  CNY: 0.086,
+  ZAR: 0.22,
+  MYR: 0.056,
+  THB: 0.44,
 };
 
 const symbols: Record<Currency, string> = {
@@ -28,6 +36,14 @@ const symbols: Record<Currency, string> = {
   GBP: "£",
   SAR: "SAR ",
   RUB: "₽",
+  AUD: "A$",
+  CAD: "C$",
+  SGD: "S$",
+  JPY: "¥",
+  CNY: "¥",
+  ZAR: "R ",
+  MYR: "RM ",
+  THB: "฿",
 };
 
 const CurrencyContext = createContext<CurrencyContextType | undefined>(undefined);
@@ -37,7 +53,7 @@ export function CurrencyProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const saved = localStorage.getItem("orbinex_currency") as Currency;
-    if (saved && ["INR", "USD", "EUR", "AED", "GBP", "SAR", "RUB"].includes(saved)) {
+    if (saved && ["INR", "USD", "EUR", "AED", "GBP", "SAR", "RUB", "AUD", "CAD", "SGD", "JPY", "CNY", "ZAR", "MYR", "THB"].includes(saved)) {
       setCurrencyState(saved);
     }
   }, []);

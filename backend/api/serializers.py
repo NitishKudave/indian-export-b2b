@@ -2,6 +2,7 @@ from .models import (
     Category, Product, ProductImage, Inquiry, 
     BlogPost, ExportCountry, Certification, Testimonial, HomepageBanner
 )
+import os
 
 def get_absolute_media_url(url_or_file):
     if not url_or_file:
@@ -10,7 +11,9 @@ def get_absolute_media_url(url_or_file):
     if not url:
         return ""
     if url.startswith('/'):
-        return 'http://localhost:8000' + url
+        backend_url = os.environ.get('BACKEND_URL') or os.environ.get('RENDER_EXTERNAL_URL') or 'http://localhost:8000'
+        backend_url = backend_url.rstrip('/')
+        return backend_url + url
     return url
 
 def serialize_category(category):

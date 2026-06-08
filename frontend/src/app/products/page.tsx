@@ -12,8 +12,9 @@ function ProductsContent() {
   const initialCategory = searchParams.get("category") || "";
 
   const { formatPrice } = useCurrency();
-  const [categories, setCategories] = useState(mockData.categories);
-  const [products, setProducts] = useState<any[]>(mockData.products);
+  const [categories, setCategories] = useState<any[]>([]);
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
 
@@ -31,6 +32,10 @@ function ProductsContent() {
         if (prods && prods.length) setProducts(prods);
       } catch (err) {
         console.log("Using local mock products:", err);
+        setCategories(mockData.categories);
+        setProducts(mockData.products);
+      } finally {
+        setLoading(false);
       }
     }
     loadProducts();
@@ -109,7 +114,9 @@ function ProductsContent() {
       </div>
 
       {/* Grid listing */}
-      {filteredProducts.length === 0 ? (
+      {loading ? (
+        <div className="text-center py-20 text-xs text-slate-400">Loading catalog from server...</div>
+      ) : filteredProducts.length === 0 ? (
         <div className="text-center py-20 border border-dashed border-slate-200 dark:border-slate-800 rounded-2xl">
           <SlidersHorizontal className="w-12 h-12 text-slate-300 dark:text-slate-700 mx-auto mb-4" />
           <p className="font-bold text-slate-900 dark:text-white">No products found</p>

@@ -1629,27 +1629,36 @@
 
         async function saveBanner(e) {
             e.preventDefault();
-            const payload = {
-                title: document.getElementById('bn_title').value,
-                subtitle: document.getElementById('bn_subtitle').value,
-                link: document.getElementById('bn_link').value,
-                display_order: parseInt(document.getElementById('bn_display_order').value) || 0,
-                image_url: document.getElementById('bn_image_url').value,
-                active: document.getElementById('bn_active').checked
-            };
+            const formData = new FormData();
+            formData.append('title', document.getElementById('bn_title').value);
+            formData.append('subtitle', document.getElementById('bn_subtitle').value);
+            formData.append('link', document.getElementById('bn_link').value);
+            formData.append('display_order', document.getElementById('bn_display_order').value || 0);
+            formData.append('active', document.getElementById('bn_active').checked);
+
+            const fileInput = document.getElementById('bn_image_file');
+            const imageUrl = document.getElementById('bn_image_url').value;
+
+            if (fileInput && fileInput.files.length > 0) {
+                formData.append('image', fileInput.files[0]);
+            } else if (imageUrl) {
+                formData.append('image_url', imageUrl);
+            }
+
+            const token = sessionStorage.getItem('admin_token');
+            const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
 
             let endpoint = `${API_URL}/api/banners/`;
-            let method = 'POST';
+            let method = 'POST'; // Backend handles POST for both create and update with multipart
             if (currentEditingId) {
                 endpoint += `${currentEditingId}/`;
-                method = 'PATCH';
             }
 
             try {
                 const res = await fetch(endpoint, {
                     method,
-                    headers: getAuthHeaders(),
-                    body: JSON.stringify(payload)
+                    headers,
+                    body: formData
                 });
                 if (res.status === 401) return logout();
                 if (res.ok) {

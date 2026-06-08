@@ -1060,7 +1060,7 @@
 
             // Show "+ Add New" button if applicable
             const actionBtn = document.getElementById('actionHeaderBtn');
-            if (tabName !== 'overview' && tabName !== 'inquiries' && tabName !== 'categories') {
+            if (tabName !== 'overview' && tabName !== 'inquiries') {
                 actionBtn.style.display = 'block';
                 actionBtn.textContent = `+ Add ${tabName.charAt(0).toUpperCase() + tabName.slice(1, -1)}`;
             } else {
@@ -1872,6 +1872,11 @@
                 document.getElementById('certificationForm').reset();
                 document.getElementById('certificationFormTitle').textContent = 'New Compliance Certificate';
                 openModal('certificationModal');
+            } else if (currentTab === 'categories') {
+                document.getElementById('categoryForm').reset();
+                document.getElementById('categoryFormTitle').textContent = 'New Product Division';
+                document.getElementById('catImagePreviewBox').style.display = 'none';
+                openModal('categoryModal');
             }
         }
 
@@ -1995,7 +2000,7 @@
             const token = sessionStorage.getItem('admin_token');
             const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
 
-            const endpoint = `${API_URL}/api/categories/${currentEditingCategorySlug}/`;
+            const endpoint = currentEditingCategorySlug ? `${API_URL}/api/categories/${currentEditingCategorySlug}/` : `${API_URL}/api/categories/`;
 
             try {
                 const res = await fetch(endpoint, {

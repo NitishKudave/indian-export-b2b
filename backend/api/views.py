@@ -12,12 +12,12 @@ from datetime import timedelta
 
 from .models import (
     Category, Product, ProductImage, Inquiry, 
-    BlogPost, ExportCountry, Certification, Testimonial, HomepageBanner
+    BlogPost, ExportCountry, Certification, Testimonial, HomepageBanner, GalleryImage
 )
 from .serializers import (
     serialize_category, serialize_product, serialize_inquiry, 
     serialize_blog, serialize_country, serialize_certification, 
-    serialize_testimonial, serialize_banner
+    serialize_testimonial, serialize_banner, serialize_gallery
 )
 from .utils import generate_jwt, verify_jwt
 
@@ -79,6 +79,7 @@ def api_root(request):
                 'testimonials': '/api/testimonials/',
                 'certifications': '/api/certifications/',
                 'countries': '/api/countries/',
+                'gallery': '/api/gallery/',
             },
             'inquiries': '/api/inquiries/',
             'admin_stats': '/api/admin/stats/',
@@ -729,6 +730,86 @@ def banner_detail(request, pk):
         @admin_required
         def handle_delete(req):
             banner.delete()
+            return JsonResponse({}, status=204)
+        return handle_delete(request)
+
+@csrf_exempt
+def gallery_list(request):
+    if request.method == 'GET':
+        gallery = GalleryImage.objects.all()
+        return JsonResponse([serialize_gallery(g) for g in gallery], safe=False)
+        
+    elif request.method == 'POST':
+        @admin_required
+        def handle_post(req):
+            try:
+                # Support both json and multipart
+                if req.content_type and req.content_type.startswith('multipart/form-data'):
+                    data = req.POST
+                    image_file = req.FILES.get('image')
+                else:
+                    data = json.loads(req.body)
+                    image_file = None
+
+                g = GalleryImage.objects.create(
+                    title=data['title'],
+                    category=data.get('category', ''),
+                    description=data.get('description', ''),
+                    image_url=data.get('image_url', ''),
+                    display_order=data.get('display_order', 0)
+                )
+                if image_file:
+                    g.image = image_file
+                    g.image_url = ''
+                    g.save()
+                return JsonResponse(serialize_gallery(g), status=201)
+            except Exception as e:
+                return JsonResponse({'detail': str(e)}, status=400)
+        return handle_post(request)
+
+@csrf_exempt
+def gallery_detail(request, pk):
+    try:
+        gallery = GalleryImage.objects.get(pk=pk)
+    except GalleryImage.DoesNotExist:
+        return JsonResponse({'detail': 'Not found'}, status=404)
+        
+    if request.method == 'GET':
+        return JsonResponse(serialize_gallery(gallery))
+        
+    elif request.method in ['PUT', 'PATCH'] or (request.method == 'POST'):
+        @admin_required
+        def handle_put(req):
+            try:
+                # Support both json and multipart
+                if req.content_type and req.content_type.startswith('multipart/form-data'):
+                    data = req.POST
+                    image_file = req.FILES.get('image')
+                else:
+                    data = json.loads(req.body)
+                    image_file = None
+
+                gallery.title = data.get('title', gallery.title)
+                gallery.category = data.get('category', gallery.category)
+                gallery.description = data.get('description', gallery.description)
+                gallery.display_order = data.get('display_order', gallery.display_order)
+                
+                if image_file:
+                    gallery.image = image_file
+                    gallery.image_url = ''
+                elif 'image_url' in data:
+                    gallery.image_url = data.get('image_url')
+                    
+                gallery.save()
+                return JsonResponse(serialize_gallery(gallery))
+            except Exception as e:
+                return JsonResponse({'detail': str(e)}, status=400)
+        return handle_put(request)
+        
+    elif request.method == 'DELETE':
+        @admin_required
+        def handle_delete(req):
+            gallery.delete()
             return JsonResponse({}, status=204)
         return handle_delete(request)
 

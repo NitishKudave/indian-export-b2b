@@ -40,4 +40,8 @@ urlpatterns = [
     
     path('banners/', views.banner_list, name='banner-list'),
     path('banners/<int:pk>/', views.banner_detail, name='banner-detail'),
+    
+    # Gallery
+    path('gallery/', views.gallery_list, name='gallery-list'),
+    path('gallery/<int:pk>/', views.gallery_detail, name='gallery-detail'),
 ]

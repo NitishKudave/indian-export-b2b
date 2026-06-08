@@ -1,6 +1,7 @@
 from .models import (
     Category, Product, ProductImage, Inquiry, 
-    BlogPost, ExportCountry, Certification, Testimonial, HomepageBanner
+    BlogPost, ExportCountry, Certification, Testimonial, HomepageBanner,
+    GalleryImage
 )
 import os
 
@@ -136,4 +137,16 @@ def serialize_banner(banner):
         'link': banner.link,
         'active': banner.active,
         'display_order': banner.display_order
+    }
+
+def serialize_gallery(item):
+    if not item:
+        return None
+    return {
+        'id': item.id,
+        'title': item.title,
+        'category': item.category,
+        'description': item.description,
+        'image_url': get_absolute_media_url(item.image if item.image else item.image_url),
+        'display_order': item.display_order
     }

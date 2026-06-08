@@ -570,6 +570,7 @@
                 <li class="menu-item" data-target="banners" onclick="switchTab('banners')">🖼️ Home Banners</li>
                 <li class="menu-item" data-target="testimonials" onclick="switchTab('testimonials')">💬 Testimonials</li>
                 <li class="menu-item" data-target="certifications" onclick="switchTab('certifications')">🏆 Certifications</li>
+                <li class="menu-item" data-target="gallery" onclick="switchTab('gallery')">📸 Infrastructure Gallery</li>
             </ul>
 
             <div class="sidebar-footer">
@@ -698,6 +699,17 @@
                         <p style="font-size:12px; color:var(--text-light); margin-bottom:20px;">These are the cards shown in the <strong>"Export Product Divisions"</strong> section on the homepage. Edit the image, name, or description for each division below.</p>
                         <div id="categoriesContainer" class="table-responsive">
                             <div class="loading-box"><div class="spinner"></div><p>Syncing divisions...</p></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- TAB PANEL: GALLERY -->
+                <div id="panel-gallery" class="tab-panel">
+                    <div class="section-card">
+                        <div class="section-title">📸 Infrastructure Gallery</div>
+                        <p style="font-size:12px; color:var(--text-light); margin-bottom:20px;">Manage photos displayed on the Gallery page.</p>
+                        <div id="galleryContainer" class="table-responsive">
+                            <div class="loading-box"><div class="spinner"></div><p>Syncing gallery...</p></div>
                         </div>
                     </div>
                 </div>
@@ -986,6 +998,48 @@
         </div>
     </div>
 
+    <!-- 6. Gallery Form Modal -->
+    <div class="modal-overlay" id="galleryModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="galleryFormTitle">New Gallery Image</h3>
+                <button class="modal-close" onclick="closeModal('galleryModal')">&times;</button>
+            </div>
+            <form id="galleryForm" onsubmit="saveGallery(event)">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Title *</label>
+                        <input type="text" id="g_title" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Category / Section</label>
+                        <input type="text" id="g_category" placeholder="e.g. Warehouse Processing">
+                    </div>
+                    <div class="form-group">
+                        <label>Display Order</label>
+                        <input type="number" id="g_display_order" value="0" required>
+                    </div>
+                    <div class="form-group form-full">
+                        <label>Description</label>
+                        <textarea id="g_description" rows="2"></textarea>
+                    </div>
+                    <div class="form-group form-full">
+                        <label>Upload Image</label>
+                        <input type="file" id="g_image_file" accept="image/*">
+                    </div>
+                    <div class="form-group form-full">
+                        <label>OR Image URL</label>
+                        <input type="url" id="g_image_url" placeholder="https://images.unsplash.com/...">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="action-btn" onclick="closeModal('galleryModal')">Cancel</button>
+                    <button type="submit" class="action-header-btn">Save Image</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- AJAX LOGIC SCRIPTS -->
     <script>
         const API_URL = 'https://indian-export-b2b.onrender.com';
@@ -1054,7 +1108,8 @@
                 blogs: 'Blog Articles Management',
                 banners: 'Homepage Slides Configuration',
                 testimonials: 'Testimonial Reviews Management',
-                certifications: 'Compliance Certifications Management'
+                certifications: 'Compliance Certifications Management',
+                gallery: 'Infrastructure Gallery Management'
             };
             document.getElementById('pageTitle').textContent = labels[tabName] || 'Control desk';
 
@@ -1090,6 +1145,8 @@
                 loadTestimonials();
             } else if (tabName === 'certifications') {
                 loadCertifications();
+            } else if (tabName === 'gallery') {
+                loadGallery();
             }
         }
 
@@ -1877,6 +1934,10 @@
                 document.getElementById('categoryFormTitle').textContent = 'New Product Division';
                 document.getElementById('catImagePreviewBox').style.display = 'none';
                 openModal('categoryModal');
+            } else if (currentTab === 'gallery') {
+                document.getElementById('galleryForm').reset();
+                document.getElementById('galleryFormTitle').textContent = 'New Gallery Image';
+                openModal('galleryModal');
             }
         }
 
@@ -2030,6 +2091,114 @@
                 });
                 if (res.status === 401) return logout();
                 if (res.ok) loadCategories();
+            } catch (err) {
+                alert('Delete operation failed.');
+            }
+        }
+
+        // ============================================================
+        // GALLERY CRUD
+        // ============================================================
+        async function loadGallery() {
+            const el = document.getElementById('galleryContainer');
+            el.innerHTML = '<div class="loading-box"><div class="spinner"></div><p>Fetching gallery...</p></div>';
+            try {
+                const res = await fetch(`${API_URL}/api/gallery/`);
+                const items = await res.json();
+                if (!items.length) {
+                    el.innerHTML = '<div class="loading-box"><p>No gallery images found.</p></div>';
+                    return;
+                }
+
+                let html = '<table class="table"><thead><tr><th>Image</th><th>Title</th><th>Category</th><th>Order</th><th>Actions</th></tr></thead><tbody>';
+                items.forEach(g => {
+                    html += `<tr>
+                        <td><img src="${g.image_url || 'https://via.placeholder.com/100'}" class="crop-thumbnail"></td>
+                        <td><strong>${g.title}</strong></td>
+                        <td>${g.category || '-'}</td>
+                        <td>${g.display_order}</td>
+                        <td>
+                            <button class="action-btn" onclick="editGallery(${g.id})">Edit</button>
+                            <button class="action-btn delete" onclick="deleteGallery(${g.id})">Delete</button>
+                        </td>
+                    </tr>`;
+                });
+                html += '</tbody></table>';
+                el.innerHTML = html;
+            } catch (err) {
+                el.innerHTML = '<div class="loading-box"><p style="color:var(--danger);">Failed to connect to API.</p></div>';
+            }
+        }
+
+        async function editGallery(id) {
+            try {
+                const res = await fetch(`${API_URL}/api/gallery/${id}/`);
+                const g = await res.json();
+                currentEditingId = g.id;
+
+                document.getElementById('g_title').value = g.title;
+                document.getElementById('g_category').value = g.category || '';
+                document.getElementById('g_description').value = g.description || '';
+                document.getElementById('g_display_order').value = g.display_order;
+                document.getElementById('g_image_url').value = g.image_url || '';
+                
+                document.getElementById('galleryFormTitle').textContent = `Edit Gallery Image`;
+                openModal('galleryModal');
+            } catch (err) {
+                alert('Could not fetch gallery details.');
+            }
+        }
+
+        async function saveGallery(e) {
+            e.preventDefault();
+            const formData = new FormData();
+            formData.append('title', document.getElementById('g_title').value);
+            formData.append('category', document.getElementById('g_category').value);
+            formData.append('description', document.getElementById('g_description').value);
+            formData.append('display_order', document.getElementById('g_display_order').value);
+
+            const fileInput = document.getElementById('g_image_file');
+            const imageUrl = document.getElementById('g_image_url').value;
+
+            if (fileInput && fileInput.files.length > 0) {
+                formData.append('image', fileInput.files[0]);
+            } else if (imageUrl) {
+                formData.append('image_url', imageUrl);
+            }
+
+            const token = sessionStorage.getItem('admin_token');
+            const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+
+            const endpoint = currentEditingId ? `${API_URL}/api/gallery/${currentEditingId}/` : `${API_URL}/api/gallery/`;
+
+            try {
+                const res = await fetch(endpoint, {
+                    method: 'POST',
+                    headers,
+                    body: formData
+                });
+                if (res.status === 401) return logout();
+                if (res.ok) {
+                    closeModal('galleryModal');
+                    loadGallery();
+                } else {
+                    const err = await res.json();
+                    alert('Error saving image: ' + JSON.stringify(err));
+                }
+            } catch (err) {
+                alert('Failed to connect to API server.');
+            }
+        }
+
+        async function deleteGallery(id) {
+            if (!confirm('Delete this gallery image?')) return;
+            try {
+                const res = await fetch(`${API_URL}/api/gallery/${id}/`, {
+                    method: 'DELETE',
+                    headers: getAuthHeaders()
+                });
+                if (res.status === 401) return logout();
+                if (res.ok) loadGallery();
             } catch (err) {
                 alert('Delete operation failed.');
             }

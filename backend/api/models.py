@@ -1,4 +1,4 @@
-﻿from django.db import models
+from django.db import models
 from django.utils.text import slugify
 
 class Category(models.Model):
@@ -173,6 +173,20 @@ class HomepageBanner(models.Model):
     image_url = models.URLField(blank=True, null=True, help_text="Fallback external URL")
     link = models.CharField(max_length=100, default="/products")
     active = models.BooleanField(default=True)
+    display_order = models.IntegerField(default=0)
+
+    class Meta:
+        ordering = ['display_order']
+
+    def __str__(self):
+        return self.title
+
+class GalleryImage(models.Model):
+    title = models.CharField(max_length=150)
+    category = models.CharField(max_length=100, help_text="e.g. Warehouse Processing, Packaging Unit")
+    description = models.TextField(blank=True, null=True)
+    image = models.ImageField(upload_to='gallery/', blank=True, null=True)
+    image_url = models.URLField(blank=True, null=True, help_text="Fallback external URL")
     display_order = models.IntegerField(default=0)
 
     class Meta:

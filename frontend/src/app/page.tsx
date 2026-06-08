@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
@@ -11,10 +11,11 @@ import {
 
 export default function Home() {
   const { formatPrice } = useCurrency();
-  const [categories, setCategories] = useState(mockData.categories);
-  const [products, setProducts] = useState(mockData.products.slice(0, 4));
-  const [banners, setBanners] = useState(mockData.banners);
-  const [testimonials, setTestimonials] = useState(mockData.testimonials);
+  const [categories, setCategories] = useState<any[]>([]);
+  const [products, setProducts] = useState<any[]>([]);
+  const [banners, setBanners] = useState<any[]>([]);
+  const [testimonials, setTestimonials] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   
   // Hero Carousel State
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -50,6 +51,12 @@ export default function Home() {
         if (testData && testData.length) setTestimonials(testData);
       } catch (err) {
         console.log("Using local mock data fallback:", err);
+        setCategories(mockData.categories);
+        setProducts(mockData.products.slice(0, 4));
+        setBanners(mockData.banners);
+        setTestimonials(mockData.testimonials);
+      } finally {
+        setLoading(false);
       }
     }
     loadData();
@@ -57,6 +64,7 @@ export default function Home() {
 
   // Auto-slide hero banner
   useEffect(() => {
+    if (banners.length === 0) return;
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % banners.length);
     }, 6000);
@@ -149,20 +157,22 @@ export default function Home() {
         ))}
 
         {/* Carousel controls */}
-        <div className="absolute bottom-6 right-6 z-20 flex gap-2">
-          <button
-            onClick={() => setCurrentSlide((currentSlide - 1 + banners.length) % banners.length)}
-            className="w-10 h-10 rounded-full border border-white/20 bg-black/30 hover:bg-black/60 text-white flex items-center justify-center transition-colors"
-          >
-            <ChevronLeft className="w-5 h-5" />
-          </button>
-          <button
-            onClick={() => setCurrentSlide((currentSlide + 1) % banners.length)}
-            className="w-10 h-10 rounded-full border border-white/20 bg-black/30 hover:bg-black/60 text-white flex items-center justify-center transition-colors"
-          >
-            <ChevronRight className="w-5 h-5" />
-          </button>
-        </div>
+        {banners.length > 0 && (
+          <div className="absolute bottom-6 right-6 z-20 flex gap-2">
+            <button
+              onClick={() => setCurrentSlide((currentSlide - 1 + banners.length) % banners.length)}
+              className="w-10 h-10 rounded-full border border-white/20 bg-black/30 hover:bg-black/60 text-white flex items-center justify-center transition-colors"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <button
+              onClick={() => setCurrentSlide((currentSlide + 1) % banners.length)}
+              className="w-10 h-10 rounded-full border border-white/20 bg-black/30 hover:bg-black/60 text-white flex items-center justify-center transition-colors"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
+        )}
       </section>
 
       {/* 2. VALUE PROPOSITION SECTION */}

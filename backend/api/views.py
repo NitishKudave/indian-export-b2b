@@ -685,15 +685,31 @@ def banner_list(request):
         @admin_required
         def handle_post(req):
             try:
-                data = json.loads(req.body)
+                # Support both json and multipart
+                if req.content_type and req.content_type.startswith('multipart/form-data'):
+                    data = req.POST
+                    image_file = req.FILES.get('image')
+                else:
+                    data = json.loads(req.body)
+                    image_file = None
+
+                # For FormData, booleans come as strings
+                is_active = data.get('active', True)
+                if isinstance(is_active, str):
+                    is_active = is_active.lower() == 'true'
+
                 b = HomepageBanner.objects.create(
                     title=data['title'],
                     subtitle=data.get('subtitle', ''),
                     image_url=data.get('image_url', ''),
-                    link=data.get('link', '/products'),
-                    active=data.get('active', True),
+                    link=data.get('link', ''),
+                    active=is_active,
                     display_order=data.get('display_order', 0)
                 )
+                if image_file:
+                    b.image = image_file
+                    b.image_url = ''
+                    b.save()
                 return JsonResponse(serialize_banner(b), status=201)
             except Exception as e:
                 return JsonResponse({'detail': str(e)}, status=400)
@@ -709,17 +725,34 @@ def banner_detail(request, pk):
     if request.method == 'GET':
         return JsonResponse(serialize_banner(banner))
         
-    elif request.method in ['PUT', 'PATCH']:
+    elif request.method in ['PUT', 'PATCH'] or request.method == 'POST':
         @admin_required
         def handle_put(req):
             try:
-                data = json.loads(req.body)
+                if req.content_type and req.content_type.startswith('multipart/form-data'):
+                    data = req.POST
+                    image_file = req.FILES.get('image')
+                else:
+                    data = json.loads(req.body)
+                    image_file = None
+
                 banner.title = data.get('title', banner.title)
                 banner.subtitle = data.get('subtitle', banner.subtitle)
-                banner.image_url = data.get('image_url', banner.image_url)
                 banner.link = data.get('link', banner.link)
-                banner.active = data.get('active', banner.active)
                 banner.display_order = data.get('display_order', banner.display_order)
+                
+                if 'active' in data:
+                    is_active = data.get('active')
+                    if isinstance(is_active, str):
+                        is_active = is_active.lower() == 'true'
+                    banner.active = is_active
+
+                if image_file:
+                    banner.image = image_file
+                    banner.image_url = ''
+                elif 'image_url' in data:
+                    banner.image_url = data.get('image_url')
+
                 banner.save()
                 return JsonResponse(serialize_banner(banner))
             except Exception as e:

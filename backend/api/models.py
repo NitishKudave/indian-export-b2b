@@ -171,7 +171,7 @@ class HomepageBanner(models.Model):
     subtitle = models.CharField(max_length=250, blank=True, null=True)
     image = models.ImageField(upload_to='banners/', blank=True, null=True)
     image_url = models.URLField(blank=True, null=True, help_text="Fallback external URL")
-    link = models.CharField(max_length=100, default="/products")
+    link = models.CharField(max_length=100, default="/products", blank=True, null=True)
     active = models.BooleanField(default=True)
     display_order = models.IntegerField(default=0)
 

@@ -51,10 +51,10 @@ export default function Home() {
         if (testData && testData.length) setTestimonials(testData);
       } catch (err) {
         console.log("Using local mock data fallback:", err);
-        setCategories(mockData.categories);
-        setProducts(mockData.products.slice(0, 4));
-        setBanners(mockData.banners);
-        setTestimonials(mockData.testimonials);
+        setCategories([]);
+        setProducts([]);
+        setBanners([]);
+        setTestimonials([]);
       } finally {
         setLoading(false);
       }
@@ -121,7 +121,7 @@ export default function Home() {
             {/* Background Image with overlay */}
             <div 
               className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-10000 scale-105"
-              style={{ backgroundImage: `url(${bgImages[idx % bgImages.length]})` }}
+              style={{ backgroundImage: `url(${slide.image_url || bgImages[idx % bgImages.length]})` }}
             />
             <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent" />
             
@@ -138,12 +138,14 @@ export default function Home() {
                   {slide.subtitle}
                 </p>
                 <div className="flex flex-wrap gap-4 pt-2">
-                  <Link
-                    href={slide.link || "/products"}
-                    className="saffron-gradient text-white font-bold px-8 py-3.5 rounded-lg shadow-md hover:shadow-orange-500/20 active:scale-95 transition-all text-sm flex items-center gap-2"
-                  >
-                    Explore Catalog <ArrowRight className="w-4 h-4" />
-                  </Link>
+                  {slide.link && (
+                    <Link
+                      href={slide.link}
+                      className="saffron-gradient text-white font-bold px-8 py-3.5 rounded-lg shadow-md hover:shadow-orange-500/20 active:scale-95 transition-all text-sm flex items-center gap-2"
+                    >
+                      Explore <ArrowRight className="w-4 h-4" />
+                    </Link>
+                  )}
                   <Link
                     href="/inquiry"
                     className="bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold px-8 py-3.5 rounded-lg active:scale-95 transition-all text-sm"

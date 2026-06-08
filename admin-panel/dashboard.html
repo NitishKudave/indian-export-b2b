@@ -884,16 +884,28 @@
                         <input type="text" id="bn_subtitle">
                     </div>
                     <div class="form-group">
-                        <label>Slide Link *</label>
-                        <input type="text" id="bn_link" value="/products" required>
+                        <label>Slide Link</label>
+                        <input type="text" id="bn_link" value="/products">
+                        <small style="color:var(--text-light); font-size:10px;">Optional.</small>
                     </div>
                     <div class="form-group">
                         <label>Display Order</label>
                         <input type="number" id="bn_display_order" value="0" required>
                     </div>
-                    <div class="form-group form-full">
-                        <label>Image URL</label>
-                        <input type="url" id="bn_image_url" placeholder="https://images.unsplash.com/...">
+                    <div class="form-group form-full" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:16px;">
+                        <label style="color:#0f172a; margin-bottom:10px; display:block;">🖼️ Banner Image</label>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; align-items:end;">
+                            <div class="form-group" style="margin:0;">
+                                <label>Upload Image File</label>
+                                <input type="file" id="bn_image_file" accept="image/*">
+                                <small style="color:var(--text-light); font-size:10px;">Recommended: 1200×600px (2:1 aspect ratio)</small>
+                            </div>
+                            <div class="form-group" style="margin:0;">
+                                <label>OR Paste Image URL</label>
+                                <input type="url" id="bn_image_url" placeholder="https://images.unsplash.com/...">
+                                <small style="color:var(--text-light); font-size:10px;">Unsplash, direct links etc.</small>
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group form-full" style="flex-direction: row; align-items: center; gap: 8px;">
                         <input type="checkbox" id="bn_active" checked style="width: auto;">

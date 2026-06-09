@@ -52,10 +52,34 @@ function InquiryContent() {
     e.preventDefault();
     setStatus("submitting");
     try {
+      // 1. Save to database via backend API
       await apiFetch("/inquiries/", {
         method: "POST",
         body: JSON.stringify(formData),
       });
+
+      // 2. Send email notification via Web3Forms directly from the browser
+      try {
+        const productName = products.find(p => p.id.toString() === formData.target_product.toString())?.name || "General Request";
+        await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            access_key: "8ab4fb79-a9d1-4c24-8a55-b0eb1e07be16",
+            subject: `New B2B RFQ: ${formData.company || formData.full_name}`,
+            from_name: "Orbinex B2B Portal",
+            name: formData.full_name,
+            email: formData.email,
+            message: `New Request For Quotation (RFQ) Received\n\nName: ${formData.full_name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\nCompany: ${formData.company || 'N/A'}\n\nTarget Product: ${productName}\nQuantity: ${formData.quantity}\nShipping Terms: ${formData.shipping_terms}\nDestination Port: ${formData.destination_port || 'N/A'}\n\nSpecifications:\n${formData.message}`,
+          }),
+        });
+      } catch (emailErr) {
+        console.error("Web3Forms email delivery failed:", emailErr);
+      }
+
       setStatus("success");
       setStatusMessage("Thank you! Your quotation request has been sent to our export desk. We will respond with pricing within 12 hours.");
       setFormData({

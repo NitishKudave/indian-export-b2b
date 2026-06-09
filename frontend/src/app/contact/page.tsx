@@ -23,6 +23,7 @@ export default function Contact() {
     e.preventDefault();
     setStatus("submitting");
     try {
+      // 1. Save to database via backend API
       await apiFetch("/inquiries/", {
         method: "POST",
         body: JSON.stringify({
@@ -30,6 +31,29 @@ export default function Contact() {
           message: `[Contact Form Message]\n${formData.message}`,
         }),
       });
+
+      // 2. Send email notification via Web3Forms directly from the browser (bypasses Cloudflare bot-protection)
+      try {
+        await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            access_key: "8ab4fb79-a9d1-4c24-8a55-b0eb1e07be16",
+            subject: `New B2B Inquiry: ${formData.company || formData.full_name}`,
+            from_name: "Orbinex B2B Portal",
+            name: formData.full_name,
+            email: formData.email,
+            message: `New Inquiry Received from Orbinexglobal Website\n\nName: ${formData.full_name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\nCompany: ${formData.company || 'N/A'}\n\nMessage:\n${formData.message}`,
+          }),
+        });
+      } catch (emailErr) {
+        console.error("Web3Forms email delivery failed:", emailErr);
+        // We don't throw here, since the inquiry was saved to the DB successfully.
+      }
+
       setStatus("success");
       setStatusMessage("Your message has been sent. Our team will get back to you shortly.");
       setFormData({

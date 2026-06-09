@@ -34,8 +34,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${inter.variable} antialiased min-h-screen flex flex-col`}>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${inter.variable} antialiased min-h-screen flex flex-col`} suppressHydrationWarning>
         <LayoutWrapper>
           {children}
         </LayoutWrapper>

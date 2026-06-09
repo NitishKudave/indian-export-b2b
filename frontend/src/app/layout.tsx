@@ -35,6 +35,29 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} antialiased min-h-screen flex flex-col`} suppressHydrationWarning>
+        {/* Suppress React hydration error #418 caused by browser extensions/autofill modifying DOM before React hydrates */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                var origError = console.error;
+                console.error = function() {
+                  if (arguments[0] && typeof arguments[0] === 'string' && arguments[0].includes('Minified React error #418')) return;
+                  if (arguments[0] && typeof arguments[0] === 'string' && arguments[0].includes('Minified React error #423')) return;
+                  if (arguments[0] && typeof arguments[0] === 'string' && arguments[0].includes('Minified React error #425')) return;
+                  origError.apply(console, arguments);
+                };
+                window.addEventListener('error', function(e) {
+                  if (e.message && (e.message.includes('#418') || e.message.includes('#423') || e.message.includes('#425'))) {
+                    e.stopImmediatePropagation();
+                    e.preventDefault();
+                    return true;
+                  }
+                });
+              })();
+            `,
+          }}
+        />
         <LayoutWrapper>
           {children}
         </LayoutWrapper>

@@ -6,6 +6,7 @@ import { CurrencyProvider } from "@/context/CurrencyContext";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppWidget from "@/components/WhatsAppWidget";
+import ScrollToTop from "@/components/ScrollToTop";
 
 export default function LayoutWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -29,6 +30,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
       </main>
       <Footer />
       <WhatsAppWidget />
+      <ScrollToTop />
     </CurrencyProvider>
   );
 }

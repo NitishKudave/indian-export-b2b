@@ -49,28 +49,35 @@ const symbols: Record<Currency, string> = {
 const CurrencyContext = createContext<CurrencyContextType | undefined>(undefined);
 
 export function CurrencyProvider({ children }: { children: React.ReactNode }) {
-  const [currency, setCurrencyState] = useState<Currency>("USD"); // Default to USD globally for B2B
+  const [currency, setCurrencyState] = useState<Currency>("USD");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const saved = localStorage.getItem("orbinex_currency") as Currency;
-    if (saved && ["INR", "USD", "EUR", "AED", "GBP", "SAR", "RUB", "AUD", "CAD", "SGD", "JPY", "CNY", "ZAR", "MYR", "THB"].includes(saved)) {
-      setCurrencyState(saved);
+    try {
+      const saved = localStorage.getItem("orbinex_currency") as Currency;
+      if (saved && ["INR", "USD", "EUR", "AED", "GBP", "SAR", "RUB", "AUD", "CAD", "SGD", "JPY", "CNY", "ZAR", "MYR", "THB"].includes(saved)) {
+        setCurrencyState(saved);
+      }
+    } catch {
+      // localStorage blocked (e.g. InPrivate mode with tracking prevention)
     }
     setMounted(true);
   }, []);
 
   const setCurrency = (curr: Currency) => {
     setCurrencyState(curr);
-    localStorage.setItem("orbinex_currency", curr);
+    try {
+      localStorage.setItem("orbinex_currency", curr);
+    } catch {
+      // localStorage blocked
+    }
   };
 
   const formatPrice = (priceInr: number, unit = "") => {
-    // Use USD during SSR to match server render
     const activeCurrency = mounted ? currency : "USD";
     const converted = priceInr * rates[activeCurrency];
     const symbol = symbols[activeCurrency];
-    const formatted = converted.toLocaleString(undefined, {
+    const formatted = converted.toLocaleString("en-US", {
       minimumFractionDigits: activeCurrency === "INR" ? 0 : 2,
       maximumFractionDigits: 2,
     });

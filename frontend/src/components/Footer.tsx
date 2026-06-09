@@ -18,15 +18,11 @@ export default function Footer() {
       ></div>
 
       {/* Fresh Fruits & Vegetables Graphic resting on edge */}
-      <div className="absolute right-4 sm:right-10 lg:right-24 bottom-full translate-y-[25%] z-20 pointer-events-none">
+      <div className="absolute right-4 sm:right-10 lg:right-24 bottom-full translate-y-[35%] z-20 pointer-events-none">
         <img 
-          src="https://pngimg.com/uploads/fruit/fruit_PNG2148.png" 
+          src="https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&q=80&w=600" 
           alt="Fresh Farm Fruits" 
-          className="w-64 sm:w-80 lg:w-[450px] object-contain drop-shadow-2xl"
-          onError={(e) => {
-            // Fallback fruit image
-            e.currentTarget.src = "https://pngimg.com/uploads/fruit/fruit_PNG2163.png";
-          }}
+          className="w-48 h-48 sm:w-64 sm:h-64 lg:w-72 lg:h-72 object-cover rounded-full border-[6px] border-slate-950 shadow-2xl"
         />
       </div>
 

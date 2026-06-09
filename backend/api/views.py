@@ -417,27 +417,26 @@ def inquiry_list(request):
                 ip_address=ip
             )
             
-            # Send Email Notification Asynchronously
+            # Send Email Notification
             if settings.ADMIN_EMAIL:
-                subject = f"New B2B Inquiry: {inquiry.company or inquiry.full_name}"
-                product_name = target_product.name if target_product else 'General Request'
-                body = f"New Inquiry Received from Orbinexglobal Website\n\nName: {inquiry.full_name}\nEmail: {inquiry.email}\nPhone: {inquiry.phone}\nCompany: {inquiry.company}\n\nTarget Product: {product_name}\nQuantity: {inquiry.quantity}\nShipping Terms: {inquiry.shipping_terms}\nDestination Port: {inquiry.destination_port}\n\nMessage:\n{inquiry.message}"
-                
-                def send_email_async():
-                    try:
-                        from django.core.mail import send_mail
-                        send_mail(
-                            subject, 
-                            body, 
-                            settings.DEFAULT_FROM_EMAIL, 
-                            [settings.ADMIN_EMAIL], 
-                            fail_silently=True
-                        )
-                    except Exception as e:
-                        print(f"Email sending failed: {e}")
-                
-                import threading
-                threading.Thread(target=send_email_async).start()
+                try:
+                    subject = f"New B2B Inquiry: {inquiry.company or inquiry.full_name}"
+                    product_name = target_product.name if target_product else 'General Request'
+                    body = f"New Inquiry Received from Orbinexglobal Website\n\nName: {inquiry.full_name}\nEmail: {inquiry.email}\nPhone: {inquiry.phone}\nCompany: {inquiry.company}\n\nTarget Product: {product_name}\nQuantity: {inquiry.quantity}\nShipping Terms: {inquiry.shipping_terms}\nDestination Port: {inquiry.destination_port}\n\nMessage:\n{inquiry.message}"
+                    
+                    from django.core.mail import send_mail
+                    print(f"Attempting to send email to {settings.ADMIN_EMAIL} from {settings.DEFAULT_FROM_EMAIL}")
+                    
+                    send_mail(
+                        subject, 
+                        body, 
+                        settings.DEFAULT_FROM_EMAIL, 
+                        [settings.ADMIN_EMAIL], 
+                        fail_silently=False
+                    )
+                    print("Email sent successfully!")
+                except Exception as e:
+                    print(f"CRITICAL ERROR: Email sending failed: {str(e)}")
 
             return JsonResponse(serialize_inquiry(inquiry), status=201)
         except Exception as e:

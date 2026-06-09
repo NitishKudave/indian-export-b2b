@@ -71,9 +71,15 @@ function InquiryContent() {
             access_key: "8ab4fb79-a9d1-4c24-8a55-b0eb1e07be16",
             subject: `New B2B RFQ: ${formData.company || formData.full_name}`,
             from_name: "Orbinex B2B Portal",
-            name: formData.full_name,
-            email: formData.email,
-            message: `New Request For Quotation (RFQ) Received\n\nName: ${formData.full_name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\nCompany: ${formData.company || 'N/A'}\n\nTarget Product: ${productName}\nQuantity: ${formData.quantity}\nShipping Terms: ${formData.shipping_terms}\nDestination Port: ${formData.destination_port || 'N/A'}\n\nSpecifications:\n${formData.message}`,
+            "Client Name": formData.full_name,
+            "Email Address": formData.email,
+            "Phone Number": formData.phone,
+            "Company Name": formData.company || "Not Provided",
+            "Target Product": productName,
+            "Estimated Quantity": formData.quantity,
+            "Shipping Terms": formData.shipping_terms,
+            "Destination Port": formData.destination_port || "Not Provided",
+            "Detailed Specifications": formData.message,
           }),
         });
       } catch (emailErr) {

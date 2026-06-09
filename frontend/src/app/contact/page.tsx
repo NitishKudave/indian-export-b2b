@@ -44,9 +44,11 @@ export default function Contact() {
             access_key: "8ab4fb79-a9d1-4c24-8a55-b0eb1e07be16",
             subject: `New B2B Inquiry: ${formData.company || formData.full_name}`,
             from_name: "Orbinex B2B Portal",
-            name: formData.full_name,
-            email: formData.email,
-            message: `New Inquiry Received from Orbinexglobal Website\n\nName: ${formData.full_name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\nCompany: ${formData.company || 'N/A'}\n\nMessage:\n${formData.message}`,
+            "Client Name": formData.full_name,
+            "Email Address": formData.email,
+            "Phone Number": formData.phone,
+            "Company Name": formData.company || "Not Provided",
+            "Inquiry Message": formData.message,
           }),
         });
       } catch (emailErr) {

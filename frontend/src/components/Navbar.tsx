@@ -82,6 +82,9 @@ export default function Navbar() {
             <div className="flex items-center gap-1.5 bg-slate-800/60 border border-slate-700 rounded-lg px-2.5 py-1.5">
               <Globe className="w-4 h-4 text-orange-400" />
               <select
+                id="currency-desktop"
+                name="currency-desktop"
+                aria-label="Select currency"
                 value={currency}
                 onChange={(e) => setCurrency(e.target.value as any)}
                 className="bg-transparent text-xs font-semibold text-white focus:outline-none cursor-pointer"
@@ -116,6 +119,9 @@ export default function Navbar() {
           {/* Mobile Menu Trigger */}
           <div className="flex items-center lg:hidden gap-3">
             <select
+              id="currency-mobile"
+              name="currency-mobile"
+              aria-label="Select currency"
               value={currency}
               onChange={(e) => setCurrency(e.target.value as any)}
               className="bg-slate-800/80 text-xs border border-slate-700 font-semibold text-white rounded-lg px-2 py-1 focus:outline-none"

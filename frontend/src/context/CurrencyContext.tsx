@@ -50,12 +50,14 @@ const CurrencyContext = createContext<CurrencyContextType | undefined>(undefined
 
 export function CurrencyProvider({ children }: { children: React.ReactNode }) {
   const [currency, setCurrencyState] = useState<Currency>("USD"); // Default to USD globally for B2B
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem("orbinex_currency") as Currency;
     if (saved && ["INR", "USD", "EUR", "AED", "GBP", "SAR", "RUB", "AUD", "CAD", "SGD", "JPY", "CNY", "ZAR", "MYR", "THB"].includes(saved)) {
       setCurrencyState(saved);
     }
+    setMounted(true);
   }, []);
 
   const setCurrency = (curr: Currency) => {
@@ -64,10 +66,12 @@ export function CurrencyProvider({ children }: { children: React.ReactNode }) {
   };
 
   const formatPrice = (priceInr: number, unit = "") => {
-    const converted = priceInr * rates[currency];
-    const symbol = symbols[currency];
+    // Use USD during SSR to match server render
+    const activeCurrency = mounted ? currency : "USD";
+    const converted = priceInr * rates[activeCurrency];
+    const symbol = symbols[activeCurrency];
     const formatted = converted.toLocaleString(undefined, {
-      minimumFractionDigits: currency === "INR" ? 0 : 2,
+      minimumFractionDigits: activeCurrency === "INR" ? 0 : 2,
       maximumFractionDigits: 2,
     });
     return `${symbol}${formatted}${unit ? ` per ${unit}` : ""}`;

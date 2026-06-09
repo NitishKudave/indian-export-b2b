@@ -281,7 +281,7 @@ export default function HomeClient({
                   {/* Reference Price */}
                   <div className="flex justify-between items-baseline border-t border-slate-100 dark:border-slate-800 pt-3">
                     <span className="text-xs text-slate-400">Ref. Price:</span>
-                    <span className="font-extrabold text-slate-900 dark:text-white text-base">
+                    <span className="font-extrabold text-slate-900 dark:text-white text-base" suppressHydrationWarning>
                       {formatPrice(prod.base_price_inr, prod.price_unit)}
                     </span>
                   </div>

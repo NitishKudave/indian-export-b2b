@@ -4,15 +4,17 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCurrency } from "@/context/CurrencyContext";
-import { Globe, Menu, X, Landmark, DollarSign } from "lucide-react";
+import { Globe, Menu, X } from "lucide-react";
 
 export default function Navbar() {
   const pathname = usePathname();
   const { currency, setCurrency } = useCurrency();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };
@@ -31,6 +33,9 @@ export default function Navbar() {
     { name: "Blog", href: "/blog" },
     { name: "Contact", href: "/contact" },
   ];
+
+  // Use a stable default value during SSR/hydration to prevent mismatch
+  const displayCurrency = mounted ? currency : "USD";
 
   return (
     <header
@@ -85,9 +90,10 @@ export default function Navbar() {
                 id="currency-desktop"
                 name="currency-desktop"
                 aria-label="Select currency"
-                value={currency}
+                value={displayCurrency}
                 onChange={(e) => setCurrency(e.target.value as any)}
                 className="bg-transparent text-xs font-semibold text-white focus:outline-none cursor-pointer"
+                suppressHydrationWarning
               >
                 <option value="USD" className="bg-slate-900 text-white">USD ($)</option>
                 <option value="INR" className="bg-slate-900 text-white">INR (₹)</option>
@@ -122,9 +128,10 @@ export default function Navbar() {
               id="currency-mobile"
               name="currency-mobile"
               aria-label="Select currency"
-              value={currency}
+              value={displayCurrency}
               onChange={(e) => setCurrency(e.target.value as any)}
               className="bg-slate-800/80 text-xs border border-slate-700 font-semibold text-white rounded-lg px-2 py-1 focus:outline-none"
+              suppressHydrationWarning
             >
               <option value="USD">USD</option>
               <option value="INR">INR</option>

@@ -416,6 +416,29 @@ def inquiry_list(request):
                 destination_port=data.get('destination_port', ''),
                 ip_address=ip
             )
+            
+            # Send Email Notification Asynchronously
+            if settings.ADMIN_EMAIL:
+                subject = f"New B2B Inquiry: {inquiry.company or inquiry.full_name}"
+                product_name = target_product.name if target_product else 'General Request'
+                body = f"New Inquiry Received from Orbinexglobal Website\n\nName: {inquiry.full_name}\nEmail: {inquiry.email}\nPhone: {inquiry.phone}\nCompany: {inquiry.company}\n\nTarget Product: {product_name}\nQuantity: {inquiry.quantity}\nShipping Terms: {inquiry.shipping_terms}\nDestination Port: {inquiry.destination_port}\n\nMessage:\n{inquiry.message}"
+                
+                def send_email_async():
+                    try:
+                        from django.core.mail import send_mail
+                        send_mail(
+                            subject, 
+                            body, 
+                            settings.DEFAULT_FROM_EMAIL, 
+                            [settings.ADMIN_EMAIL], 
+                            fail_silently=True
+                        )
+                    except Exception as e:
+                        print(f"Email sending failed: {e}")
+                
+                import threading
+                threading.Thread(target=send_email_async).start()
+
             return JsonResponse(serialize_inquiry(inquiry), status=201)
         except Exception as e:
             return JsonResponse({'detail': str(e)}, status=400)

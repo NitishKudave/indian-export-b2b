@@ -417,29 +417,37 @@ def inquiry_list(request):
                 ip_address=ip
             )
             
-            # Send Email Notification Asynchronously
-            if settings.ADMIN_EMAIL:
-                subject = f"New B2B Inquiry: {inquiry.company or inquiry.full_name}"
-                product_name = target_product.name if target_product else 'General Request'
-                body = f"New Inquiry Received from Orbinexglobal Website\n\nName: {inquiry.full_name}\nEmail: {inquiry.email}\nPhone: {inquiry.phone}\nCompany: {inquiry.company}\n\nTarget Product: {product_name}\nQuantity: {inquiry.quantity}\nShipping Terms: {inquiry.shipping_terms}\nDestination Port: {inquiry.destination_port}\n\nMessage:\n{inquiry.message}"
-                
-                def send_email_async():
-                    try:
-                        from django.core.mail import send_mail
-                        print(f"Async: Attempting to send email to {settings.ADMIN_EMAIL} from {settings.DEFAULT_FROM_EMAIL}")
-                        send_mail(
-                            subject, 
-                            body, 
-                            settings.DEFAULT_FROM_EMAIL, 
-                            [settings.ADMIN_EMAIL], 
-                            fail_silently=False
-                        )
-                        print("Async: Email sent successfully!")
-                    except Exception as e:
-                        print(f"CRITICAL ERROR: Async email sending failed: {str(e)}")
-                
-                import threading
-                threading.Thread(target=send_email_async).start()
+            # Send Email Notification via Web3Forms API (HTTP)
+            WEB3FORMS_ACCESS_KEY = "8ab4fb79-a9d1-4c24-8a55-b0eb1e07be16"
+            
+            subject = f"New B2B Inquiry: {inquiry.company or inquiry.full_name}"
+            product_name = target_product.name if target_product else 'General Request'
+            
+            body = f"New Inquiry Received from Orbinexglobal Website\n\nName: {inquiry.full_name}\nEmail: {inquiry.email}\nPhone: {inquiry.phone}\nCompany: {inquiry.company}\n\nTarget Product: {product_name}\nQuantity: {inquiry.quantity}\nShipping Terms: {inquiry.shipping_terms}\nDestination Port: {inquiry.destination_port}\n\nMessage:\n{inquiry.message}"
+            
+            def send_web3forms_async():
+                try:
+                    import urllib.request
+                    import json
+                    url = "https://api.web3forms.com/submit"
+                    payload = {
+                        "access_key": WEB3FORMS_ACCESS_KEY,
+                        "subject": subject,
+                        "from_name": "Orbinex B2B Portal",
+                        "name": inquiry.full_name,
+                        "email": inquiry.email,
+                        "message": body,
+                    }
+                    data = json.dumps(payload).encode('utf-8')
+                    req = urllib.request.Request(url, data=data, headers={'Content-Type': 'application/json', 'Accept': 'application/json'})
+                    with urllib.request.urlopen(req, timeout=10) as response:
+                        result = json.loads(response.read().decode())
+                        print(f"Async: Web3Forms email sent successfully! Response: {result}")
+                except Exception as e:
+                    print(f"CRITICAL ERROR: Async Web3Forms API failed: {str(e)}")
+            
+            import threading
+            threading.Thread(target=send_web3forms_async).start()
 
             return JsonResponse(serialize_inquiry(inquiry), status=201)
         except Exception as e:

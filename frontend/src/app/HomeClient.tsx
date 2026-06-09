@@ -479,10 +479,12 @@ export default function HomeClient({
             <form onSubmit={handleFormSubmit} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-400">Full Name *</label>
+                  <label htmlFor="full_name" className="text-xs font-semibold text-slate-400">Full Name *</label>
                   <input
+                    id="full_name"
                     type="text"
                     name="full_name"
+                    autoComplete="name"
                     value={formData.full_name}
                     onChange={handleInputChange}
                     required
@@ -491,10 +493,12 @@ export default function HomeClient({
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-400">Business Email *</label>
+                  <label htmlFor="email" className="text-xs font-semibold text-slate-400">Business Email *</label>
                   <input
+                    id="email"
                     type="email"
                     name="email"
+                    autoComplete="email"
                     value={formData.email}
                     onChange={handleInputChange}
                     required
@@ -506,10 +510,12 @@ export default function HomeClient({
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-400">Phone Number (with Code) *</label>
+                  <label htmlFor="phone" className="text-xs font-semibold text-slate-400">Phone Number (with Code) *</label>
                   <input
+                    id="phone"
                     type="tel"
                     name="phone"
+                    autoComplete="tel"
                     value={formData.phone}
                     onChange={handleInputChange}
                     required
@@ -518,10 +524,12 @@ export default function HomeClient({
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-400">Company Name</label>
+                  <label htmlFor="company" className="text-xs font-semibold text-slate-400">Company Name</label>
                   <input
+                    id="company"
                     type="text"
                     name="company"
+                    autoComplete="organization"
                     value={formData.company}
                     onChange={handleInputChange}
                     placeholder="e.g. Amana Fresh Trading LLC"
@@ -532,9 +540,11 @@ export default function HomeClient({
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="sm:col-span-2 space-y-1">
-                  <label className="text-xs font-semibold text-slate-400">Target Product</label>
+                  <label htmlFor="target_product" className="text-xs font-semibold text-slate-400">Target Product</label>
                   <select
+                    id="target_product"
                     name="target_product"
+                    autoComplete="off"
                     value={formData.target_product}
                     onChange={handleInputChange}
                     className="w-full bg-slate-900 border border-slate-800 rounded-lg px-4 py-2.5 text-xs text-white focus:outline-none focus:border-orange-500"
@@ -549,10 +559,12 @@ export default function HomeClient({
                   </select>
                 </div>
                 <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-400">Quantity Required</label>
+                  <label htmlFor="quantity" className="text-xs font-semibold text-slate-400">Quantity Required</label>
                   <input
+                    id="quantity"
                     type="text"
                     name="quantity"
+                    autoComplete="off"
                     value={formData.quantity}
                     onChange={handleInputChange}
                     placeholder="e.g. 15 MT"
@@ -562,9 +574,11 @@ export default function HomeClient({
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-slate-400">Inquiry Message *</label>
+                <label htmlFor="message" className="text-xs font-semibold text-slate-400">Inquiry Message *</label>
                 <textarea
+                  id="message"
                   name="message"
+                  autoComplete="off"
                   value={formData.message}
                   onChange={handleInputChange}
                   required

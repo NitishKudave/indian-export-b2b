@@ -109,10 +109,12 @@ function InquiryContent() {
         <form onSubmit={handleFormSubmit} className="space-y-6 text-slate-700 dark:text-slate-300">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-400">Full Name *</label>
+              <label htmlFor="inq_full_name" className="text-xs font-bold text-slate-400">Full Name *</label>
               <input
+                id="inq_full_name"
                 type="text"
                 name="full_name"
+                autoComplete="name"
                 value={formData.full_name}
                 onChange={handleInputChange}
                 required
@@ -120,10 +122,12 @@ function InquiryContent() {
               />
             </div>
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-400">Business Email *</label>
+              <label htmlFor="inq_email" className="text-xs font-bold text-slate-400">Business Email *</label>
               <input
+                id="inq_email"
                 type="email"
                 name="email"
+                autoComplete="email"
                 value={formData.email}
                 onChange={handleInputChange}
                 required
@@ -134,10 +138,12 @@ function InquiryContent() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-400">Phone Number (with Code) *</label>
+              <label htmlFor="inq_phone" className="text-xs font-bold text-slate-400">Phone Number (with Code) *</label>
               <input
+                id="inq_phone"
                 type="tel"
                 name="phone"
+                autoComplete="tel"
                 value={formData.phone}
                 onChange={handleInputChange}
                 required
@@ -145,10 +151,12 @@ function InquiryContent() {
               />
             </div>
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-400">Company Name</label>
+              <label htmlFor="inq_company" className="text-xs font-bold text-slate-400">Company Name</label>
               <input
+                id="inq_company"
                 type="text"
                 name="company"
+                autoComplete="organization"
                 value={formData.company}
                 onChange={handleInputChange}
                 className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-lg px-4 py-2.5 text-xs text-slate-800 dark:text-white focus:outline-none focus:border-orange-500"
@@ -158,9 +166,11 @@ function InquiryContent() {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <div className="sm:col-span-2 space-y-1.5">
-              <label className="text-xs font-bold text-slate-400">Target Product Division</label>
+              <label htmlFor="inq_target_product" className="text-xs font-bold text-slate-400">Target Product Division</label>
               <select
+                id="inq_target_product"
                 name="target_product"
+                autoComplete="off"
                 value={formData.target_product}
                 onChange={handleInputChange}
                 className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-lg px-4 py-2.5 text-xs text-slate-800 dark:text-white focus:outline-none focus:border-orange-500"
@@ -174,10 +184,12 @@ function InquiryContent() {
               </select>
             </div>
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-400">Estimated Quantity *</label>
+              <label htmlFor="inq_quantity" className="text-xs font-bold text-slate-400">Estimated Quantity *</label>
               <input
+                id="inq_quantity"
                 type="text"
                 name="quantity"
+                autoComplete="off"
                 value={formData.quantity}
                 onChange={handleInputChange}
                 required
@@ -189,9 +201,11 @@ function InquiryContent() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-400">Trade Incoterms</label>
+              <label htmlFor="inq_shipping_terms" className="text-xs font-bold text-slate-400">Trade Incoterms</label>
               <select
+                id="inq_shipping_terms"
                 name="shipping_terms"
+                autoComplete="off"
                 value={formData.shipping_terms}
                 onChange={handleInputChange}
                 className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-lg px-4 py-2.5 text-xs text-slate-800 dark:text-white focus:outline-none focus:border-orange-500"
@@ -202,10 +216,12 @@ function InquiryContent() {
               </select>
             </div>
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-400">Destination Port</label>
+              <label htmlFor="inq_destination_port" className="text-xs font-bold text-slate-400">Destination Port</label>
               <input
+                id="inq_destination_port"
                 type="text"
                 name="destination_port"
+                autoComplete="off"
                 value={formData.destination_port}
                 onChange={handleInputChange}
                 placeholder="e.g. Port of Rotterdam, Netherlands"
@@ -215,9 +231,11 @@ function InquiryContent() {
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-400">Detailed Crop Specifications / Size Sizing Requirements</label>
+            <label htmlFor="inq_message" className="text-xs font-bold text-slate-400">Detailed Crop Specifications / Size Sizing Requirements</label>
             <textarea
+              id="inq_message"
               name="message"
+              autoComplete="off"
               value={formData.message}
               onChange={handleInputChange}
               required

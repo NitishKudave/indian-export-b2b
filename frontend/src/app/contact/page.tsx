@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState } from "react";
 import { Mail, Phone, MapPin, Send, HelpCircle, ShieldAlert } from "lucide-react";
@@ -104,10 +104,12 @@ export default function Contact() {
           <form onSubmit={handleFormSubmit} className="space-y-4 text-slate-700 dark:text-slate-300">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-slate-400">Full Name *</label>
+                <label htmlFor="ct_full_name" className="text-xs font-semibold text-slate-400">Full Name *</label>
                 <input
+                  id="ct_full_name"
                   type="text"
                   name="full_name"
+                  autoComplete="name"
                   value={formData.full_name}
                   onChange={handleInputChange}
                   required
@@ -115,10 +117,12 @@ export default function Contact() {
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-slate-400">Email Address *</label>
+                <label htmlFor="ct_email" className="text-xs font-semibold text-slate-400">Email Address *</label>
                 <input
+                  id="ct_email"
                   type="email"
                   name="email"
+                  autoComplete="email"
                   value={formData.email}
                   onChange={handleInputChange}
                   required
@@ -129,10 +133,12 @@ export default function Contact() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-slate-400">Phone Number *</label>
+                <label htmlFor="ct_phone" className="text-xs font-semibold text-slate-400">Phone Number *</label>
                 <input
+                  id="ct_phone"
                   type="tel"
                   name="phone"
+                  autoComplete="tel"
                   value={formData.phone}
                   onChange={handleInputChange}
                   required
@@ -140,10 +146,12 @@ export default function Contact() {
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-slate-400">Company Name</label>
+                <label htmlFor="ct_company" className="text-xs font-semibold text-slate-400">Company Name</label>
                 <input
+                  id="ct_company"
                   type="text"
                   name="company"
+                  autoComplete="organization"
                   value={formData.company}
                   onChange={handleInputChange}
                   className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-lg px-4 py-2.5 text-xs text-slate-800 dark:text-white focus:outline-none focus:border-orange-500"
@@ -152,9 +160,11 @@ export default function Contact() {
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs font-semibold text-slate-400">Message *</label>
+              <label htmlFor="ct_message" className="text-xs font-semibold text-slate-400">Message *</label>
               <textarea
+                id="ct_message"
                 name="message"
+                autoComplete="off"
                 value={formData.message}
                 onChange={handleInputChange}
                 required

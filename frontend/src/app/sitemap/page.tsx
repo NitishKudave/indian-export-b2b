@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 import Link from "next/link";
 import { 
   Map, Home, ShoppingBag, Info, Globe, Package, 
@@ -171,23 +171,7 @@ export default function SitemapPage() {
           );
         })}
 
-        {/* XML Sitemap link */}
-        <div className="bg-slate-900 rounded-2xl border border-slate-800 p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div>
-            <h3 className="text-white font-bold text-base mb-1">XML Sitemap (for Search Engines)</h3>
-            <p className="text-slate-400 text-xs">
-              Machine-readable XML sitemap for Google, Bing, and other search engine crawlers.
-            </p>
-          </div>
-          <a
-            href="/sitemap.xml"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 transition-colors text-white font-bold px-5 py-2.5 rounded-lg text-xs shrink-0"
-          >
-            View sitemap.xml <ArrowRight className="w-3.5 h-3.5" />
-          </a>
-        </div>
+
 
         {/* Footer nav */}
         <div className="flex flex-wrap gap-4 justify-center text-xs text-slate-400">

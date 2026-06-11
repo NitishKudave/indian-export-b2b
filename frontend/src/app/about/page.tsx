@@ -109,17 +109,17 @@ export default function About() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
-          {/* Vikram */}
+          {/* Supriya */}
           <div className="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-100 dark:border-slate-800 shadow-sm p-6 text-center space-y-4">
             <div className="w-24 h-24 rounded-full bg-slate-100 flex items-center justify-center font-bold text-2xl text-slate-700 mx-auto">
-              VS
+              SM
             </div>
             <div className="space-y-1">
-              <h3 className="font-bold text-lg text-slate-900 dark:text-white">Vikram Singh</h3>
+              <h3 className="font-bold text-lg text-slate-900 dark:text-white">Supriya Mahajan</h3>
               <p className="text-orange-500 text-xs font-semibold">Founder & Managing Director</p>
             </div>
             <p className="text-slate-500 text-xs leading-relaxed">
-              With 15+ years in agricultural global trade, Vikram oversees grower clusters contracts and strategic retail partnerships in the GCC and Europe.
+              With 15+ years in agricultural global trade, Supriya oversees grower cluster contracts and strategic retail partnerships in the GCC and Europe.
             </p>
           </div>
 

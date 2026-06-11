@@ -15,10 +15,10 @@ export default function Packaging() {
       {/* Header Banner */}
       <section className="relative h-80 bg-slate-950 flex items-center justify-center">
         <div 
-          className="absolute inset-0 bg-cover bg-center opacity-40"
+          className="absolute inset-0 bg-cover bg-center opacity-70"
           style={{ backgroundImage: `url('/packaging-banner.png')` }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/60 to-slate-950/90" />
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/20 to-slate-950/80" />
         <div className="relative text-center text-white space-y-3 z-10 max-w-2xl px-4">
           <h1 className="text-4xl font-extrabold tracking-wide sm:text-5xl">B2B Packaging Solutions</h1>
           <p className="text-slate-300 text-sm">

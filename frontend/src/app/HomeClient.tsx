@@ -204,8 +204,8 @@ export default function HomeClient({
         </div>
       </section>
 
-      {/* 3. PRODUCT CATEGORIES - AUTO SLIDER */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+      {/* 3. PRODUCT CATEGORIES - GRID (all visible) */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         <div className="text-center max-w-2xl mx-auto space-y-3">
           <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white sm:text-4xl">
             Export Product Divisions
@@ -215,72 +215,30 @@ export default function HomeClient({
           </p>
         </div>
 
-        {/* Slider wrapper */}
-        <div
-          className="relative overflow-hidden"
-          onMouseEnter={() => setCatPaused(true)}
-          onMouseLeave={() => setCatPaused(false)}
-        >
-          {/* Sliding track */}
-          <div
-            className="flex transition-transform duration-700 ease-in-out"
-            style={{ transform: `translateX(-${catSlide * 100}%)` }}
-          >
-            {categories.map((cat) => (
-              <div key={cat.id} className="min-w-full px-2">
-                <Link
-                  href={`/products?category=${cat.slug}`}
-                  className="group relative h-[420px] rounded-2xl overflow-hidden shadow-lg border border-slate-100 dark:border-slate-800 block"
-                >
-                  <div
-                    className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-                    style={{ backgroundImage: `url(${cat.image_url})` }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
-                  <div className="absolute bottom-8 left-8 right-8 text-white space-y-2">
-                    <h3 className="font-extrabold text-3xl group-hover:text-orange-400 transition-colors">
-                      {cat.name}
-                    </h3>
-                    <p className="text-slate-300 text-sm line-clamp-2">
-                      {cat.description}
-                    </p>
-                    <span className="inline-flex items-center gap-1.5 text-xs font-bold text-orange-400 pt-1">
-                      View Catalog <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </span>
-                  </div>
-                </Link>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+          {categories.map((cat) => (
+            <Link
+              key={cat.id}
+              href={`/products?category=${cat.slug}`}
+              className="group relative h-80 rounded-2xl overflow-hidden shadow-sm border border-slate-100 dark:border-slate-800 block"
+            >
+              <div 
+                className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                style={{ backgroundImage: `url(${cat.image_url})` }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
+              <div className="absolute bottom-6 left-6 right-6 text-white space-y-1.5">
+                <h3 className="font-bold text-xl group-hover:text-orange-400 transition-colors">
+                  {cat.name}
+                </h3>
+                <p className="text-slate-300 text-xs line-clamp-2">
+                  {cat.description}
+                </p>
+                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-orange-400 pt-1">
+                  View Catalog <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                </span>
               </div>
-            ))}
-          </div>
-
-          {/* Prev / Next Buttons */}
-          <button
-            onClick={() => setCatSlide((prev) => (prev - 1 + categories.length) % categories.length)}
-            className="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full bg-black/50 hover:bg-black/80 text-white flex items-center justify-center transition-colors shadow-lg"
-            aria-label="Previous division"
-          >
-            <ChevronLeft className="w-5 h-5" />
-          </button>
-          <button
-            onClick={() => setCatSlide((prev) => (prev + 1) % categories.length)}
-            className="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full bg-black/50 hover:bg-black/80 text-white flex items-center justify-center transition-colors shadow-lg"
-            aria-label="Next division"
-          >
-            <ChevronRight className="w-5 h-5" />
-          </button>
-        </div>
-
-        {/* Dot Indicators */}
-        <div className="flex justify-center gap-2 pt-2">
-          {categories.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setCatSlide(idx)}
-              className={`h-2.5 rounded-full transition-all duration-300 ${
-                idx === catSlide ? "w-8 bg-orange-500" : "w-2.5 bg-slate-300 dark:bg-slate-600"
-              }`}
-              aria-label={`Go to division ${idx + 1}`}
-            />
+            </Link>
           ))}
         </div>
       </section>

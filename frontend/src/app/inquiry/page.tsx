@@ -240,9 +240,12 @@ function InquiryContent() {
                 onChange={handleInputChange}
                 className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-lg px-4 py-2.5 text-xs text-slate-800 dark:text-white focus:outline-none focus:border-orange-500"
               >
-                <option value="FOB">FOB (Free on Board - Port of Nhava Sheva/Mumbai)</option>
-                <option value="CIF">CIF (Cost, Insurance, Freight - Your Port)</option>
-                <option value="CNF">CNF / CFR (Cost and Freight)</option>
+                <option value="EXW">EXW (Ex Works)</option>
+                <option value="FOB">FOB (Free On Board)</option>
+                <option value="CFR">CFR (Cost & Freight)</option>
+                <option value="CIF">CIF (Cost, Insurance & Freight)</option>
+                <option value="DAP">DAP (Delivered At Place)</option>
+                <option value="DDP">DDP (Delivered Duty Paid)</option>
               </select>
             </div>
             <div className="space-y-1.5">

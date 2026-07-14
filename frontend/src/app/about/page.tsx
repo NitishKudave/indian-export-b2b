@@ -108,7 +108,7 @@ export default function About() {
           <p className="text-slate-500 text-sm">The trade professionals steering Orbinexglobal's global logistics.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
+        <div className="max-w-sm mx-auto">
           {/* Supriya */}
           <div className="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-100 dark:border-slate-800 shadow-sm p-6 text-center space-y-4">
             <div className="w-24 h-24 rounded-full bg-slate-100 flex items-center justify-center font-bold text-2xl text-slate-700 mx-auto">

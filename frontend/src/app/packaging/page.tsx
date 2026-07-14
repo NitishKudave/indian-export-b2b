@@ -85,7 +85,7 @@ export default function Packaging() {
             We manufacture box templates matching your specific retail dimensions. We provide custom brand logo printing, barcoding, and private labeling support for importers.
           </p>
           <Link
-            href="/inquiry"
+            href="/inquiry?type=packaging"
             className="inline-flex items-center gap-1 bg-orange-500 hover:bg-orange-600 transition-colors font-bold px-8 py-3.5 rounded-lg text-xs tracking-wider text-white"
           >
             Request Packaging Quote <ArrowRight className="w-4 h-4" />

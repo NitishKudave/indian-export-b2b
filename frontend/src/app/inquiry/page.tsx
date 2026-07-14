@@ -8,6 +8,7 @@ import { FileSpreadsheet, Ship, FileCheck, ClipboardEdit } from "lucide-react";
 function InquiryContent() {
   const searchParams = useSearchParams();
   const preSelectedProduct = searchParams.get("product") || "";
+  const inquiryType = searchParams.get("type") || "general";
 
   const [products, setProducts] = useState(mockData.products);
   const [formData, setFormData] = useState({
@@ -110,10 +111,12 @@ function InquiryContent() {
       {/* Title */}
       <div className="text-center space-y-3">
         <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white sm:text-4xl tracking-wide">
-          B2B Request For Quotation (RFQ)
+          {inquiryType === "packaging" ? "Packaging Request For Quotation (RFQ)" : "B2B Request For Quotation (RFQ)"}
         </h1>
         <p className="text-slate-500 text-xs max-w-2xl mx-auto">
-          Please fill out the form below with your specific crop specifications, sizing criteria, required packing boxes, and port destination.
+          {inquiryType === "packaging" 
+            ? "Please fill out the form below with your specific packaging requirements, box dimensions, printing details, and delivery destination."
+            : "Please fill out the form below with your specific crop specifications, sizing criteria, required packing boxes, and port destination."}
         </p>
       </div>
 
@@ -205,10 +208,12 @@ function InquiryContent() {
                 onChange={handleInputChange}
                 className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-lg px-4 py-2.5 text-xs text-slate-800 dark:text-white focus:outline-none focus:border-orange-500"
               >
-                <option value="">General Trade Inquiry / Custom Request</option>
-                {products.map((p) => (
+                <option value="">{inquiryType === "packaging" ? "Custom Packaging Request" : "General Trade Inquiry / Custom Request"}</option>
+                {products
+                  .filter((p) => inquiryType !== "packaging" || p.category_name?.toLowerCase().includes("packaging") || p.name.toLowerCase().includes("packaging") || p.name.toLowerCase().includes("box"))
+                  .map((p) => (
                   <option key={p.id} value={p.id}>
-                    {p.name} (Origin: {p.origin.split(",")[0]})
+                    {p.name} (Origin: {p.origin?.split(",")[0] || "N/A"})
                   </option>
                 ))}
               </select>

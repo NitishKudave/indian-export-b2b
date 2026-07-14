@@ -234,42 +234,95 @@ function InquiryContent() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div className="space-y-1.5">
-              <label htmlFor="inq_shipping_terms" className="text-xs font-bold text-slate-400">Trade Incoterms</label>
-              <select
-                id="inq_shipping_terms"
-                name="shipping_terms"
-                autoComplete="off"
-                value={formData.shipping_terms}
-                onChange={handleInputChange}
-                className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-lg px-4 py-2.5 text-xs text-slate-800 dark:text-white focus:outline-none focus:border-orange-500"
-              >
-                <option value="EXW">EXW (Ex Works)</option>
-                <option value="FOB">FOB (Free On Board)</option>
-                <option value="CFR">CFR (Cost & Freight)</option>
-                <option value="CIF">CIF (Cost, Insurance & Freight)</option>
-                <option value="DAP">DAP (Delivered At Place)</option>
-                <option value="DDP">DDP (Delivered Duty Paid)</option>
-              </select>
+          {inquiryType === "packaging" ? (
+            <div className="space-y-6">
+              <div className="space-y-1.5">
+                <label htmlFor="inq_destination_port" className="text-xs font-bold text-slate-400">Destination</label>
+                <input
+                  id="inq_destination_port"
+                  type="text"
+                  name="destination_port"
+                  autoComplete="off"
+                  value={formData.destination_port}
+                  onChange={handleInputChange}
+                  placeholder="e.g. Mumbai, Maharashtra or Rotterdam, Netherlands"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-lg px-4 py-2.5 text-xs text-slate-800 dark:text-white focus:outline-none focus:border-orange-500"
+                />
+              </div>
+              <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 text-slate-300 text-[11px] leading-relaxed space-y-4">
+                <h3 className="text-orange-500 font-bold text-sm">Payment Terms – Corrugated Boxes (Domestic & Export Quality)</h3>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <h4 className="font-bold text-white mb-1.5">Domestic Orders (India):</h4>
+                    <ul className="list-disc pl-4 space-y-1">
+                      <li>100% Advance Payment for first-time orders.</li>
+                      <li>50% Advance, 50% Before Dispatch (most common).</li>
+                      <li>30 Days Credit for approved and regular customers.</li>
+                      <li>Payment against GST Invoice.</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-white mb-1.5">Export Quality Corrugated Boxes:</h4>
+                    <ul className="list-disc pl-4 space-y-1">
+                      <li>50% Advance, 50% Before Shipment (recommended for custom-printed boxes).</li>
+                      <li>100% Advance for new customers or small orders.</li>
+                      <li>For large orders (subject to mutual agreement): 30% Advance, 70% Before Dispatch, or 30–60 Days Credit for long-term business partners.</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="pt-4 border-t border-slate-800">
+                  <h4 className="font-bold text-white mb-1.5">Recommended Payment Terms for ORBINEX GLOBAL</h4>
+                  <ul className="list-disc pl-4 space-y-1">
+                    <li><strong className="text-slate-200">First Order:</strong> 50% Advance, 50% Before Dispatch.</li>
+                    <li><strong className="text-slate-200">Repeat Orders:</strong> 30% Advance, 70% Within 15 Days of Delivery (subject to mutual agreement).</li>
+                    <li>Payments to be made via Bank Transfer (NEFT/RTGS/SWIFT).</li>
+                    <li>GST Invoice (for domestic orders) or Commercial Invoice (for export orders) will be provided.</li>
+                  </ul>
+                </div>
+              </div>
             </div>
-            <div className="space-y-1.5">
-              <label htmlFor="inq_destination_port" className="text-xs font-bold text-slate-400">Destination Port</label>
-              <input
-                id="inq_destination_port"
-                type="text"
-                name="destination_port"
-                autoComplete="off"
-                value={formData.destination_port}
-                onChange={handleInputChange}
-                placeholder="e.g. Port of Rotterdam, Netherlands"
-                className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-lg px-4 py-2.5 text-xs text-slate-800 dark:text-white focus:outline-none focus:border-orange-500"
-              />
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className="space-y-1.5">
+                <label htmlFor="inq_shipping_terms" className="text-xs font-bold text-slate-400">Trade Incoterms</label>
+                <select
+                  id="inq_shipping_terms"
+                  name="shipping_terms"
+                  autoComplete="off"
+                  value={formData.shipping_terms}
+                  onChange={handleInputChange}
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-lg px-4 py-2.5 text-xs text-slate-800 dark:text-white focus:outline-none focus:border-orange-500"
+                >
+                  <option value="EXW">EXW (Ex Works)</option>
+                  <option value="FOB">FOB (Free On Board)</option>
+                  <option value="CFR">CFR (Cost & Freight)</option>
+                  <option value="CIF">CIF (Cost, Insurance & Freight)</option>
+                  <option value="DAP">DAP (Delivered At Place)</option>
+                  <option value="DDP">DDP (Delivered Duty Paid)</option>
+                </select>
+              </div>
+              <div className="space-y-1.5">
+                <label htmlFor="inq_destination_port" className="text-xs font-bold text-slate-400">Destination Port</label>
+                <input
+                  id="inq_destination_port"
+                  type="text"
+                  name="destination_port"
+                  autoComplete="off"
+                  value={formData.destination_port}
+                  onChange={handleInputChange}
+                  placeholder="e.g. Port of Rotterdam, Netherlands"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-lg px-4 py-2.5 text-xs text-slate-800 dark:text-white focus:outline-none focus:border-orange-500"
+                />
+              </div>
             </div>
-          </div>
+          )}
 
           <div className="space-y-1.5">
-            <label htmlFor="inq_message" className="text-xs font-bold text-slate-400">Detailed Crop Specifications / Size Sizing Requirements</label>
+            <label htmlFor="inq_message" className="text-xs font-bold text-slate-400">
+              {inquiryType === "packaging" ? "Detailed Packaging Specifications / Dimensions Requirements" : "Detailed Crop Specifications / Size Sizing Requirements"}
+            </label>
             <textarea
               id="inq_message"
               name="message"
@@ -278,7 +331,9 @@ function InquiryContent() {
               onChange={handleInputChange}
               required
               rows={6}
-              placeholder="Please describe size diameter (e.g. 55mm+ onion), packaging requirements (e.g. 25kg mesh bag / custom corrugated carton), specific delivery month, and required phytosanitary certificates..."
+              placeholder={inquiryType === "packaging" 
+                ? "Please describe exact box dimensions, ply requirements (e.g. 3-ply, 5-ply), print/color details, branding requirements, and delivery timeline..." 
+                : "Please describe size diameter (e.g. 55mm+ onion), packaging requirements (e.g. 25kg mesh bag / custom corrugated carton), specific delivery month, and required phytosanitary certificates..."}
               className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-lg px-4 py-2.5 text-xs text-slate-800 dark:text-white focus:outline-none focus:border-orange-500"
             />
           </div>

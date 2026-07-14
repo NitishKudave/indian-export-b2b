@@ -67,6 +67,8 @@ class Inquiry(models.Model):
     STATUS_CHOICES = [
         ('new', 'New/Unread'),
         ('contacted', 'Contacted/In Progress'),
+        ('pending', 'Pending'),
+        ('payment_received', 'Payment Received'),
         ('completed', 'Completed/Closed'),
         ('spam', 'Spam/Junk'),
     ]

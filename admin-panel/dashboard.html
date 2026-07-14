@@ -307,6 +307,8 @@
 
         .status-badge.new { background: #fee2e2; color: var(--danger); }
         .status-badge.contacted { background: #fef3c7; color: var(--warning); }
+        .status-badge.pending { background: #fef08a; color: #854d0e; }
+        .status-badge.payment_received { background: #e0e7ff; color: #3730a3; }
         .status-badge.completed { background: #d1fae5; color: var(--success); }
 
         .action-btn {
@@ -607,6 +609,20 @@
                                 <h3 id="stat-new-inquiries" style="color: var(--danger);">-</h3>
                             </div>
                             <span class="stat-icon">🔔</span>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-info">
+                                <p>Pending</p>
+                                <h3 id="stat-pending-inquiries" style="color: var(--warning);">-</h3>
+                            </div>
+                            <span class="stat-icon">⏳</span>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-info">
+                                <p>Payment Received</p>
+                                <h3 id="stat-payment-received-inquiries" style="color: var(--success);">-</h3>
+                            </div>
+                            <span class="stat-icon">💸</span>
                         </div>
                         <div class="stat-card">
                             <div class="stat-info">
@@ -1174,6 +1190,8 @@
                 
                 document.getElementById('stat-total-inquiries').textContent = data.total_inquiries || 0;
                 document.getElementById('stat-new-inquiries').textContent = data.new_inquiries || 0;
+                document.getElementById('stat-pending-inquiries').textContent = data.pending_inquiries || 0;
+                document.getElementById('stat-payment-received-inquiries').textContent = data.payment_received_inquiries || 0;
                 document.getElementById('stat-total-products').textContent = data.total_products || 0;
                 document.getElementById('stat-total-blogs').textContent = data.total_blogs || 0;
 
@@ -1412,6 +1430,8 @@
                             <select onchange="updateInqStatus(${inq.id}, this.value)" style="padding: 6px; border-radius: 6px; font-size: 11px; font-weight: bold; background: white; border: 1px solid var(--border);">
                                 <option value="new" ${inq.status === 'new' ? 'selected' : ''}>New / Unread</option>
                                 <option value="contacted" ${inq.status === 'contacted' ? 'selected' : ''}>Contacted</option>
+                                <option value="pending" ${inq.status === 'pending' ? 'selected' : ''}>Pending</option>
+                                <option value="payment_received" ${inq.status === 'payment_received' ? 'selected' : ''}>Payment Received</option>
                                 <option value="completed" ${inq.status === 'completed' ? 'selected' : ''}>Completed</option>
                             </select>
                         </td>

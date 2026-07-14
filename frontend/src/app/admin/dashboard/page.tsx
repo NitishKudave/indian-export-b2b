@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -6,7 +6,7 @@ import { apiFetch, mockData } from "@/utils/api";
 import { 
   LayoutDashboard, ShoppingBag, Inbox, BookOpen, Image, MessageSquare, Award,
   Plus, Edit, Trash2, Mail, Phone, Info, Globe, ShieldAlert, LogOut, CheckCircle2,
-  Calendar, User, DollarSign, Star, AlertCircle, Eye, ArrowRight, ShieldCheck, X, ToggleLeft, ToggleRight
+  Calendar, User, DollarSign, Star, AlertCircle, Eye, ArrowRight, ShieldCheck, X, ToggleLeft, ToggleRight, Clock
 } from "lucide-react";
 
 type TabType = "overview" | "products" | "inquiries" | "blogs" | "banners" | "testimonials" | "certifications";
@@ -675,6 +675,26 @@ export default function AdminDashboard() {
                 </div>
 
                 <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-sm flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-yellow-500/10 flex items-center justify-center text-yellow-500 shrink-0">
+                    <Clock className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">Pending</p>
+                    <p className="text-2xl font-extrabold text-white mt-0.5">{inquiries.filter(i => i.status === "pending").length}</p>
+                  </div>
+                </div>
+
+                <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-sm flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-500 shrink-0">
+                    <DollarSign className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">Payment Received</p>
+                    <p className="text-2xl font-extrabold text-white mt-0.5">{inquiries.filter(i => i.status === "payment_received").length}</p>
+                  </div>
+                </div>
+
+                <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-sm flex items-center gap-4">
                   <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-500 shrink-0">
                     <ShoppingBag className="w-6 h-6" />
                   </div>
@@ -893,11 +913,17 @@ export default function AdminDashboard() {
                                 ? "text-red-400 border-red-500/20"
                                 : inq.status === "contacted"
                                 ? "text-orange-400 border-orange-500/20"
+                                : inq.status === "pending"
+                                ? "text-yellow-400 border-yellow-500/20"
+                                : inq.status === "payment_received"
+                                ? "text-emerald-400 border-emerald-500/20"
                                 : "text-green-400 border-green-500/20"
                             }`}
                           >
                             <option value="new">New/Unread</option>
                             <option value="contacted">Contacted</option>
+                            <option value="pending">Pending</option>
+                            <option value="payment_received">Payment Received</option>
                             <option value="completed">Completed</option>
                           </select>
                         </td>

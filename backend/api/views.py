@@ -856,6 +856,8 @@ def admin_stats(request):
     if request.method == 'GET':
         total_inquiries = Inquiry.objects.count()
         new_inquiries = Inquiry.objects.filter(status='new').count()
+        pending_inquiries = Inquiry.objects.filter(status='pending').count()
+        payment_received_inquiries = Inquiry.objects.filter(status='payment_received').count()
         total_products = Product.objects.count()
         total_blogs = BlogPost.objects.count()
         
@@ -872,6 +874,8 @@ def admin_stats(request):
         return JsonResponse({
             'total_inquiries': total_inquiries,
             'new_inquiries': new_inquiries,
+            'pending_inquiries': pending_inquiries,
+            'payment_received_inquiries': payment_received_inquiries,
             'total_products': total_products,
             'total_blogs': total_blogs,
             'inquiries_last_week': inquiries_last_week,

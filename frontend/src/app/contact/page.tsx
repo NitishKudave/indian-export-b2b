@@ -108,7 +108,7 @@ export default function Contact() {
                 <div>
                   <p className="font-bold text-slate-900 dark:text-white mb-1">Phone Enquiries</p>
                   <p>General desk: +91 253 245 6789</p>
-                  <p>WhatsApp Trade: +91 98765 43210</p>
+                  <p>WhatsApp Trade: +91 94048 66986</p>
                 </div>
               </li>
               <li className="flex gap-3">

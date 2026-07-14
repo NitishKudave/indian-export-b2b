@@ -1,10 +1,10 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import { MessageSquareCode } from "lucide-react";
 
 export default function WhatsAppWidget() {
-  const phoneNumber = "+919876543210"; // Replace with company's actual WhatsApp business number
+  const phoneNumber = "+919404866986"; // Replace with company's actual WhatsApp business number
   const message = encodeURIComponent(
     "Hello Orbinexglobal, I am interested in importing agricultural products. Please share your catalog and MOQ terms."
   );

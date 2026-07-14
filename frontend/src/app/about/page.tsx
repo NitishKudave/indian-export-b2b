@@ -123,19 +123,7 @@ export default function About() {
             </p>
           </div>
 
-          {/* Ashwini */}
-          <div className="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-100 dark:border-slate-800 shadow-sm p-6 text-center space-y-4">
-            <div className="w-24 h-24 rounded-full bg-slate-100 flex items-center justify-center font-bold text-2xl text-slate-700 mx-auto">
-              AM
-            </div>
-            <div className="space-y-1">
-              <h3 className="font-bold text-lg text-slate-900 dark:text-white">Ashwini Mahajan</h3>
-              <p className="text-orange-500 text-xs font-semibold">Chief Logistics Officer</p>
-            </div>
-            <p className="text-slate-500 text-xs leading-relaxed">
-              A cold chain transportation specialist, Ashwini monitors custom clearances, port coordination, and maritime schedules for daily shipments.
-            </p>
-          </div>
+
         </div>
       </section>
     </div>

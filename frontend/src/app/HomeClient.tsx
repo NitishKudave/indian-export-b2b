@@ -73,10 +73,43 @@ export default function HomeClient({
     e.preventDefault();
     setFormStatus("submitting");
     try {
-      await apiFetch("/inquiries/", {
-        method: "POST",
-        body: JSON.stringify(formData),
-      });
+      // 1. Save to database via backend API (optional fallback)
+      try {
+        await apiFetch("/inquiries/", {
+          method: "POST",
+          body: JSON.stringify(formData),
+        });
+      } catch (dbErr) {
+        console.warn("Backend save failed. Proceeding to email delivery.", dbErr);
+      }
+
+      // 2. Send email notification via Web3Forms directly from the browser
+      try {
+        const productName = products.find(p => p.id.toString() === formData.target_product.toString())?.name || "General Request";
+        await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            access_key: "8ab4fb79-a9d1-4c24-8a55-b0eb1e07be16",
+            subject: `New B2B RFQ (Homepage): ${formData.company || formData.full_name}`,
+            from_name: "Orbinex B2B Portal",
+            "Client Name": formData.full_name,
+            "Email Address": formData.email,
+            "Phone Number": formData.phone,
+            "Company Name": formData.company || "Not Provided",
+            "Target Product": productName,
+            "Estimated Quantity": formData.quantity,
+            "Shipping Terms": formData.shipping_terms,
+            "Detailed Specifications": formData.message,
+          }),
+        });
+      } catch (emailErr) {
+        console.error("Web3Forms email delivery failed:", emailErr);
+      }
+
       setFormStatus("success");
       setFormMessage("Your trade inquiry has been submitted. Our export manager will contact you within 12 hours.");
       setFormData({

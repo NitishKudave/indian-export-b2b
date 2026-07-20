@@ -23,14 +23,18 @@ export default function Contact() {
     e.preventDefault();
     setStatus("submitting");
     try {
-      // 1. Save to database via backend API
-      await apiFetch("/inquiries/", {
-        method: "POST",
-        body: JSON.stringify({
-          ...formData,
-          message: `[Contact Form Message]\n${formData.message}`,
-        }),
-      });
+      // 1. Save to database via backend API (optional fallback)
+      try {
+        await apiFetch("/inquiries/", {
+          method: "POST",
+          body: JSON.stringify({
+            ...formData,
+            message: `[Contact Form Message]\n${formData.message}`,
+          }),
+        });
+      } catch (dbErr) {
+        console.warn("Backend save failed. Proceeding to email delivery.", dbErr);
+      }
 
       // 2. Send email notification via Web3Forms directly from the browser (bypasses Cloudflare bot-protection)
       try {

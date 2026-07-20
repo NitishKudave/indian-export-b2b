@@ -53,11 +53,15 @@ function InquiryContent() {
     e.preventDefault();
     setStatus("submitting");
     try {
-      // 1. Save to database via backend API
-      await apiFetch("/inquiries/", {
-        method: "POST",
-        body: JSON.stringify(formData),
-      });
+      // 1. Save to database via backend API (optional fallback)
+      try {
+        await apiFetch("/inquiries/", {
+          method: "POST",
+          body: JSON.stringify(formData),
+        });
+      } catch (dbErr) {
+        console.warn("Backend save failed. Proceeding to email delivery.", dbErr);
+      }
 
       // 2. Send email notification via Web3Forms directly from the browser
       try {

@@ -172,9 +172,8 @@ export const mockData = {
     { author_name: "Amit Patel", company: "Patel Brothers Wholesale, Chicago", role: "Operations Manager", review: "We buy custom corrugated boxes and dry fruits in bulk. Outstanding customer service and clear communication throughout the shipping customs process.", rating: 5 }
   ],
   banners: [
-    { title: "Premium Indian Agricultural Exporters", subtitle: "Sourcing direct from farms, shipping globally. High-grade Fresh Fruits, Vegetables, and Spices.", link: "/products" },
-    { title: "Eco-Friendly B2B Packaging Solutions", subtitle: "High durability custom corrugated and carton boxes designed for sea logistics and cold chains.", link: "/packaging" },
-    { title: "Global Export Reach & Logistics", subtitle: "Shipping weekly to GCC, USA, UK, and Europe with full phytosanitary clearance.", link: "/countries" }
+    { title: "Premium Nashik Hub Produce Exporter", subtitle: "Sourcing directly from Nashik, shipping to Europe, Arab Countries & Russia. Premium Fresh Fruits, Vegetables, and Greens.", link: "/products", image_url: "https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?auto=format&fit=crop&q=80&w=1200" },
+    { title: "Global Export Reach", subtitle: "Shipping weekly to UAE, Saudi Arabia, UK, Germany, and Russia with full phytosanitary clearance.", link: "/countries", image_url: "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=1200" }
   ],
   blogs: [
     { title: "Indian Onion Export Policy: What Importers Need to Know", slug: "indian-onion-export-policy", author: "Rajesh Sharma (Logistics Head)", content: "The agricultural sector in India is experiencing structural growth. Recent regulatory shifts from APEDA have streamlined vegetable sorting and export standards. For international wholesale buyers, India remains a premier hub due to competitive pricing and strong winter crops. Here we break down customs duty frameworks...", created_at: "2026-05-15T12:00:00Z" },

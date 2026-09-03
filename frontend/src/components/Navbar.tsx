@@ -42,8 +42,21 @@ export default function Navbar() {
       className={`sticky top-0 z-50 transition-all duration-300 bg-slate-900/95 text-white shadow-lg backdrop-blur-md border-b border-slate-800 flex flex-col`}
     >
       {/* Geopolitical Trade Notification Banner */}
-      <div className="bg-red-500/90 text-white text-center py-1.5 px-4 text-[11px] sm:text-xs font-medium tracking-wide">
-        <span className="font-bold">Important Notice:</span> Due to current geopolitical conflicts, some international trade routes and export operations may experience delays or temporary suspensions. Please contact our trade desk for real-time updates.
+      <div className="bg-red-500/90 text-white overflow-hidden whitespace-nowrap text-[11px] sm:text-xs font-medium tracking-wide py-1.5 relative w-full flex items-center">
+        <style dangerouslySetInnerHTML={{__html: `
+          @keyframes scrolling-banner {
+            0% { transform: translateX(100vw); }
+            100% { transform: translateX(-100%); }
+          }
+          .animate-scrolling-banner {
+            display: inline-block;
+            animation: scrolling-banner 25s linear infinite;
+            will-change: transform;
+          }
+        `}} />
+        <div className="animate-scrolling-banner">
+          <span className="font-bold">Important Notice:</span> Due to current geopolitical conflicts, some international trade routes and export operations may experience delays or temporary suspensions. Please contact our trade desk for real-time updates.
+        </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">

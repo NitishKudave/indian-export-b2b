@@ -39,9 +39,14 @@ export default function Navbar() {
 
   return (
     <header
-      className={`sticky top-0 z-50 transition-all duration-300 bg-slate-900/95 text-white shadow-lg backdrop-blur-md border-b border-slate-800`}
+      className={`sticky top-0 z-50 transition-all duration-300 bg-slate-900/95 text-white shadow-lg backdrop-blur-md border-b border-slate-800 flex flex-col`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Geopolitical Trade Notification Banner */}
+      <div className="bg-red-500/90 text-white text-center py-1.5 px-4 text-[11px] sm:text-xs font-medium tracking-wide">
+        <span className="font-bold">Important Notice:</span> Due to current geopolitical conflicts, some international trade routes and export operations may experience delays or temporary suspensions. Please contact our trade desk for real-time updates.
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group shrink-0">

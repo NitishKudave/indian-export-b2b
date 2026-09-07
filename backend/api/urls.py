@@ -8,6 +8,7 @@ urlpatterns = [
     # Auth
     path('token/', views.login_view, name='login'),
     path('admin/verify/', views.admin_verify, name='admin-verify'),
+    path('admin/sync-credentials/', views.sync_credentials, name='sync-credentials'),
     
     # Dashboard Stats
     path('admin/stats/', views.admin_stats, name='admin-stats'),

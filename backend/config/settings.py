@@ -32,7 +32,7 @@ INSTALLED_APPS = [
     'cloudinary',
     
     # Custom apps
-    'api',
+    'api.apps.ApiConfig',
 ]
 
 MIDDLEWARE = [

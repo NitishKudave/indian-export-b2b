@@ -153,6 +153,63 @@ def admin_verify(request):
         'is_staff': request.user.is_staff
     })
 
+# CREDENTIALS SYNC / RESET ENDPOINT
+@csrf_exempt
+def sync_credentials(request):
+    """
+    Endpoint to sync or reset admin credentials directly.
+    Can be called to apply DJANGO_SUPERUSER_PASSWORD from environment,
+    or directly set a new password.
+    """
+    import os
+    env_password = os.environ.get('DJANGO_SUPERUSER_PASSWORD')
+    env_username = os.environ.get('DJANGO_SUPERUSER_USERNAME', 'admin')
+    
+    new_password = None
+    if request.method == 'POST':
+        try:
+            body = json.loads(request.body)
+            new_password = body.get('new_password')
+            if body.get('username'):
+                env_username = body.get('username')
+        except Exception:
+            pass
+    elif request.method == 'GET':
+        new_password = request.GET.get('new_password')
+        if request.GET.get('username'):
+            env_username = request.GET.get('username')
+
+    target_password = new_password or env_password
+    if not target_password:
+        return JsonResponse({
+            'status': 'error',
+            'detail': 'No password specified and DJANGO_SUPERUSER_PASSWORD is not set in environment.'
+        }, status=400)
+
+    user, created = User.objects.get_or_create(
+        username=env_username,
+        defaults={'email': f'{env_username}@orbinexglobal.com'}
+    )
+    user.is_staff = True
+    user.is_superuser = True
+    user.is_active = True
+    user.set_password(target_password)
+    user.save()
+
+    # Clear any rate limit / failure lockout cache for caller IP
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    ip = x_forwarded_for.split(',')[0] if x_forwarded_for else request.META.get('REMOTE_ADDR')
+    if ip:
+        cache.delete(f"login_failures_{ip}")
+
+    return JsonResponse({
+        'status': 'success',
+        'message': f"Admin credentials for user '{env_username}' updated successfully.",
+        'action': 'created' if created else 'updated',
+        'username': env_username,
+        'source': 'request' if new_password else 'environment'
+    })
+
 # CATEGORY VIEW
 @csrf_exempt
 def category_list(request):

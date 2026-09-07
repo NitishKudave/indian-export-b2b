@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Force rebuild: 2026-09-07
 # exit on error
 set -o errexit
 
